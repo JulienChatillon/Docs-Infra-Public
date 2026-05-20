@@ -17,11 +17,15 @@ La machine virtuelle possède plusieurs interfaces virtuelles (vmbr) pour segmen
 
 ---
 
-## 2. Gestion des Flux et Redirections de Ports (NAT / Port Forwarding)
+## 2. Gestion des Flux (NAT Entrant et Sortant)
 
-Pour permettre la communication entre l'extérieur (WAN) et les services internes tout en garantissant la sécurité du réseau, des règles de redirection (NAT) sont configurées en cascade depuis la box opérateur vers l'interface WAN du pfSense.
+Pour permettre la communication bidirectionnelle entre l'extérieur (WAN) et les services internes tout en garantissant la sécurité du réseau, des règles de traduction d'adresses (NAT) sont configurées sur l'interface WAN du pfSense.
 
-Note technique : Les ports `<PORT_WG_NOMADE>` et `<PORT_WG_S2S>` (UDP) dédiés à WireGuard ne font pas l'objet d'une redirection (NAT) vers une autre machine derrière le routeur. Ils sont directement autorisés sur l'interface WAN du pfSense via une règle de pare-feu (Firewall Rule).*
+### 2.1 NAT Entrant (Port Forwarding)
+
+Ces règles gèrent les connexions initiées depuis l'extérieur vers les services internes, configurées en cascade depuis la box opérateur.
+
+*Note technique : Les ports `<PORT_WG_NOMADE>` et `<PORT_WG_S2S>` (UDP) dédiés à WireGuard ne font pas l'objet d'une redirection (NAT) vers une autre machine derrière le routeur. Ils sont directement autorisés sur l'interface WAN du pfSense via une règle de pare-feu (Firewall Rule).*
 
 | Port Externe | Protocole | Service cible | Destination Interne (Machine & IP) | Rôle dans l'infrastructure |
 | :--- | :--- | :--- | :--- | :--- |
@@ -29,6 +33,19 @@ Note technique : Les ports `<PORT_WG_NOMADE>` et `<PORT_WG_S2S>` (UDP) dédiés 
 | **<PORT_SUPERVISION>** | TCP | API / Supervision | `InfluxDB-VM102` (`<IP_FIXE_INFLUXDB>`) | Permet la collecte et l'interrogation des métriques de supervision. |
 | **<PORT_WG_NOMADE>** | UDP | Tunnel VPN (WireGuard) | `pfSense-Front` (VM100) | Permet la connexion distante chiffrée (Accès Nomade). |
 | **<PORT_WG_S2S>** | UDP | Tunnel VPN (WireGuard) | `pfSense-Front` (VM100) & `pfSense-Labo` (VM101) | Permet la connexion distante chiffrée (Interco Site-to-Site). |
+
+### 2.2 NAT Sortant (Outbound ou Masquerading)
+
+Le routeur masque les adresses IP privées (RFC 1918) des machines internes en les remplaçant par sa propre adresse publique (WAN) lorsqu'elles tentent d'accéder à Internet. Sans cette traduction, le trafic sortant serait bloqué et détruit par la box opérateur. 
+
+Le pfSense est configuré en mode **Hybrid Outbound NAT**, ce qui permet de conserver les règles automatiques tout en appliquant les règles manuelles suivantes pour nos différents sous-réseaux :
+
+| Interface de sortie | Réseau Source | Adresse de traduction (NAT) | Description / Rôle |
+| :--- | :--- | :--- | :--- |
+| **WAN** | `DMZ subnets` | WAN address | NAT pour accès internet DMZ |
+| **WAN** | `<ZONE_WG>` | WAN address | NAT pour accès Proxmox depuis WireGuard (Tunnel Nomade) |
+| **WAN** | `LAN subnets` | WAN address | NAT internet (Réseau de Prod principal) |
+| **WAN** | `<ZONE_SERVEURS>` | WAN address | NAT pour accès internet LABO (Zone Serveurs) |
 
 ---
 
