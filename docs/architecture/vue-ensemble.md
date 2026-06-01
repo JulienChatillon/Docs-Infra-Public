@@ -55,7 +55,7 @@ L'infrastructure dispose ensuite d'une addresse LAN fixe : <IP_FIXE_INFRA>
 
 La sécurité des accès extérieurs est assurée par des tunnels **WireGuard** :
 1.  **Accès Nomade :** VPN pour l'administration distante via l'IP <IP_FIXE_WG>.
-2.  **Site-to-Site :** Hebergement d'une connexion sécurisée entre mon laboratoire et plusieurs infras distantes partenaires (SIO) via un transit dédié (<ZONE_TRANSIT_WG>).
+2.  **Hub & Spoke :** Hebergement d'une connexion sécurisée entre mon laboratoire et plusieurs infras distantes partenaires (SIO) via un transit dédié (<ZONE_TRANSIT_WG>).
 
 ---
 
