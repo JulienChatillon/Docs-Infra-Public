@@ -60,7 +60,7 @@ Gère le trafic provenant d'Internet et entrant sur le routeur frontal.
 
 | Action | Protocole | Source | Destination | Explication du flux |
 | :--- | :--- | :--- | :--- | :--- |
-| ✅ Autoriser | UDP (<PORT_WG_SIO>) | `*` (Any) | WAN Address | Autorise les requêtes externes pour établir le tunnel VPN Site-to-Site (<PEER_S2S>). |
+| ✅ Autoriser | UDP (<PORT_WG_SIO>) | `*` (Any) | WAN Address | Autorise les requêtes externes pour établir le tunnel VPN Site-to-Site (SIO). |
 | ✅ Autoriser | UDP (<PORT_WG_NOMADE>) | `*` (Any) | WAN Address | Autorise les requêtes externes pour établir le tunnel VPN Nomade (Julien). |
 | ✅ Autoriser | TCP (80) | `*` (Any) | `<IP_FIXE_REVPROXY>` | Redirection (NAT) du trafic web HTTP vers le Nginx Proxy Manager en DMZ. |
 | ✅ Autoriser | TCP (443) | `*` (Any) | `<IP_FIXE_REVPROXY>` | Redirection (NAT) du trafic web HTTPS sécurisé vers le Nginx Proxy Manager en DMZ. |
@@ -73,8 +73,6 @@ Gère le trafic sortant de ton réseau local principal (le LAN de Prod).
 | Action | Protocole | Source | Destination | Explication du flux |
 | :--- | :--- | :--- | :--- | :--- |
 | ✅ Autoriser | `*` | `*` | LAN Address (80/443) | **Anti-Lockout Rule** : Règle système pfSense empêchant de se bloquer soi-même l'accès à l'interface d'administration. |
-| ✅ Autoriser | IPv4 | `<ZONE_SERVEURS>` | `<ZONE_FRANCOIS_OLD>` | Autorise la zone **SERVEURS** du labo à initier des connexions vers le réseau distant de <PEER_S2S> (Routage spécifique lié au S2S). |
-| ✅ Autoriser | IPv4 | `<ZONE_CLIENTS>` | `<ZONE_FRANCOIS_OLD>` | Autorise la zone **CLIENTS** du labo à initier des connexions vers le réseau distant de <PEER_S2S>. |
 | ✅ Autoriser | IPv4 / IPv6 | LAN subnets | `*` (Any) | **Règle par défaut** (Allow LAN to any) : Autorise les machines de ce réseau de confiance à sortir librement vers Internet ou la DMZ. |
 
 ---
@@ -107,11 +105,13 @@ Gère le trafic provenant de l'appareil distant connecté en nomade (Julien).
 
 ---
 
-### 🤝 Onglet WG_FRANCOIS (Tunnel Site-to-Site)
-Gère le trafic provenant du routeur distant partenaire (Réseau de <PEER_S2S>).
+### 🤝 Onglet WG_SIO (Tunnel Site-to-Site)
+Gère le trafic provenant du routeur distant partenaire (Réseau SIO).
 
 | Action | Protocole | Source | Destination | Explication du flux |
 | :--- | :--- | :--- | :--- | :--- |
-| ✅ Autoriser | IPv4 | `<ZONE_FRANCOIS_OLD>` | `<ZONE_SERVEURS>` | Autorise les machines de <PEER_S2S> à accéder à la zone **SERVEURS** de ton Labo. |
-| ✅ Autoriser | IPv4 | `<ZONE_FRANCOIS_OLD>` | `<ZONE_CLIENTS>` | Autorise les machines de <PEER_S2S> à accéder à la zone **CLIENTS** de ton Labo. *(Tout autre trafic vers ton LAN Prod ou la DMZ est implicitement bloqué).* |
-
+| ❌ Bloquer | IPv4 | `WG_SIO subnets` | `<ZONE_LAN>` | Interdit l'accès au réseau de PRODUCTION (PVE1). |
+| ❌ Bloquer | IPv4 | `WG_SIO subnets` | `<ZONE_DMZ>` | Interdit l'accès à la zone DMZ (Portfolio). |
+| ✅ Autoriser | IPv4 | `WG_SIO subnets` | `<ZONE_SERVEURS>` | Autorise les machines des camarades à accéder à la zone SERVEURS du Labo (PVE2). |
+| ✅ Autoriser | IPv4 | `WG_SIO subnets` | `<ZONE_CLIENTS>` | Autorise les machines des camarades à accéder à la zone CLIENTS du Labo (PVE2). |
+| ✅ Autoriser | IPv4 | `* (Tout)` | `WG_SIO subnets` | Autorise les camarades connectés au VPN à communiquer entre eux. |
