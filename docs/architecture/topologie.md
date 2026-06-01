@@ -13,12 +13,13 @@ Pour garantir l'étanchéité des zones, des interfaces virtuelles (vmbr) distin
 
 * **`vmbr1` (Zone LAN) - `<ZONE_LAN>` :** Cœur du système d'information de PVE1.
 * **`vmbr2` (Zone DMZ) - `<ZONE_DMZ>` :** Réseau contenant la VM Reverse Proxy pour hebergement du Portfolio.
+* **`vmbr3` (Zone DMZ_SUPERV) - `10.18.0.0/16` :** Réseau contenant la VM SuperV pour Grafana et Supervision infra.
 
 ### Inventaire des Machines Virtuelles
 | ID VM | Nom d'hôte | Rôle & Services | Interface | IP Statique / DHCP |
 | :--- | :--- | :--- | :--- | :--- |
 | **100** | `pfSense-Front` | Routeur frontal, pare-feu principal, point d'entrée WAN | Toutes | N/A |
-| **102** | `InfluxDB-VM102` | Base de données temporelle pour le monitoring de l'infra | `vmbr1` | <IP_FIXE_INFLUXDB> |
+| **102** | `SuperV-VM102` | Base de données temporelle pour le monitoring de l'infra | `vmbr3` | <IP_FIXE_INFLUXDB> |
 | **103** | `Debian-VM103` | Reverse Proxy hébergeant `julien-chatillon.com` | `vmbr2` | <IP_FIXE_REVPROXY> |
 
 ---
