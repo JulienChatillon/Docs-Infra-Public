@@ -21,7 +21,7 @@ Cette architecture remplace l'ancien tunnel Site-to-Site point-à-point. Le rout
     * Concentrateur Local (pfSense Frontal PVE1) : `<IP_FIXE_LOCALE_S2S>`
     * Pairs Distants : `<IP_FIXE_FRANCOIS_S2S>` (<PEER_S2S>), `<RESEAU_WG_SIO>.3`, etc.
 * **Endpoint Distant :** Dynamique (Les pairs distants initient la connexion vers le Hub central)
-* **Réseaux Distants Routés (via Allowed IPs) :** * Labo <PEER_S2S> : `<ZONE_FRANCOIS>` (Zone Serveurs) et `172.21.0.0/24` (Zone Clients)
+* **Réseaux Distants Routés (via Allowed IPs) :** * Labo <PEER_S2S> : `<ZONE_SERVEUR_FRANCOIS>` (Zone Serveurs) et `<ZONE_CLIENT_FRANCOIS>` (Zone Clients)
     * *Règle d'architecture : Chaque pair doit déclarer des sous-réseaux uniques pour éviter tout conflit de routage (Overlapping IP).*
 * **Sécurité :** Les règles appliquées de haut en bas sur l'interface dédiée `WG_SIO` limitent strictement le trafic entrant :
     * 🔴 **Bloqué :** Accès au réseau de Production (`<ZONE_LAN>`) et à la DMZ hébergeant les services exposés (`<ZONE_DMZ>`).
