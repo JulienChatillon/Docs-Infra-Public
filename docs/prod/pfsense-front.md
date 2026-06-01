@@ -49,20 +49,7 @@ Le pfSense est configuré en mode **Hybrid Outbound NAT**, ce qui permet de cons
 
 ---
 
-## 3. Routage Statique : La Spécificité en Cascade
-
-En raison de l'isolation du laboratoire (PVE2) derrière un second routeur (`pfSenseLABO-VM101`), une problématique de routage asymétrique a dû être résolue pour permettre le ping inter-sites (LAN-to-LAN vers le réseau distant "<PEER_S2S>" en `<ZONE_FRANCOIS>`).
-
-**Configuration mise en place :**
-Une route statique est déclarée sur le **pfSense Front** :
-* **Réseau de destination :** `<ZONE_FRANCOIS>`
-* **Passerelle (Gateway) :** IP de l'interface WAN du `pfSenseLABO-VM101` (située dans le LAN Prod en `<IP_FIXE_PVE2>`).
-
-Cette route permet au pfSense Front de savoir qu'il ne doit pas renvoyer le trafic destiné à ce réseau vers Internet (Livebox), mais le transférer au routeur du Labo qui gère le tunnel Site-to-Site.
-
----
-
-## 4. Règles de Pare-feu (Firewall Rules) - Matrice de Flux
+## 3. Règles de Pare-feu (Firewall Rules) - Matrice de Flux
 
 La politique de sécurité de l'infrastructure applique strictement le principe du moindre privilège. Le trafic n'est autorisé que s'il correspond à l'une des règles explicites ci-dessous. Le filtrage est appliqué à l'entrée de chaque interface.
 
