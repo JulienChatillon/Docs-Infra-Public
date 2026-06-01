@@ -105,7 +105,7 @@ Gère le trafic provenant de l'appareil distant connecté en nomade (Julien).
 
 ---
 
-### 🤝 Onglet WG_SIO (Tunnel Site-to-Site)
+### 🤝 Onglet WG_SIO (Tunnel Hub & Spoke)
 Gère le trafic provenant du routeur distant partenaire (Réseau SIO).
 
 | Action | Protocole | Source | Destination | Explication du flux |
