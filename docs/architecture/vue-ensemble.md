@@ -45,7 +45,7 @@ Ce nœud est strictement dédié aux travaux pratiques et aux simulations systè
 
 ---
 
-![Topologie de mon infrastructure](fossflow-export.svg)
+![Topologie de mon infrastructure](Infra-Homois.png)
 
 ---
 
