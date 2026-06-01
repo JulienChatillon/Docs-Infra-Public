@@ -13,7 +13,7 @@ La machine virtuelle possède plusieurs interfaces virtuelles (vmbr) pour segmen
 | **vmbr0** | `WAN` | `<ZONE_BOX>` | `<IP_FIXE_INFRA>` | Patte externe connectée à la Livebox. Reçoit le trafic public naté. |
 | **vmbr1** | `LAN_PROD` | `<ZONE_LAN>` | `<IP_FIXE_PVE1>` | Réseau de production interne et de supervision. |
 | **vmbr2** | `DMZ` | `<ZONE_DMZ>` | `<GW_DMZ>` | Zone démilitarisée isolée hébergeant le Reverse Proxy. |
-| **vmbr3** | `DMZ_SUPERV` | `10.18.0.0/16` | `10.18.0.254` | Zone démilitarisée isolée hébergeant la supervision. |
+| **vmbr3** | `DMZ_SUPERV` | `<ZONE_DMZ_SUPERV>` | `<GW_DMZ_SUPERV>` | Zone démilitarisée isolée hébergeant la supervision. |
 | **WG0** | `VPN_NOMADE`| `<ZONE_WG>` | `<IP_FIXE_WG>` | Interface virtuelle du tunnel WireGuard (Administration). |
 
 ---
@@ -31,7 +31,7 @@ Ces règles gèrent les connexions initiées depuis l'extérieur vers les servic
 | Port Externe | Protocole | Service cible | Destination Interne (Machine & IP) | Rôle dans l'infrastructure |
 | :--- | :--- | :--- | :--- | :--- |
 | **80 / 443** | TCP | Serveur Web (HTTP/HTTPS) | `Debian-VM103` (`<IP_FIXE_REVPROXY>`) | Permet l'accès public sécurisé au site web (Reverse Proxy / Nginx). |
-| **3000** | TCP | Interface Supervision | `SuperV-VM102` (`10.18.0.253`) | Permet l'accès sécurisé (idéalement via VPN) au tableau de bord Grafana. |
+| **<PORT_SUPERVISION>** | TCP | Interface Supervision | `SuperV-VM102` (`<IP_FIXE_SUPERV>`) | Permet l'accès sécurisé (idéalement via VPN) au tableau de bord Grafana. |
 | **<PORT_WG_NOMADE>** | UDP | Tunnel VPN (WireGuard) | `pfSense-Front` (VM100) | Permet la connexion distante chiffrée (Accès Nomade). |
 | **<PORT_WG_SIO>** | UDP | Tunnel VPN (WireGuard) | `pfSense-Front` (VM100) & `pfSense-Labo` (VM101) | Permet la connexion distante chiffrée (Interco Site-to-Site). |
 

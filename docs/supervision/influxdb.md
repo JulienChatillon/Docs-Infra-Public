@@ -8,7 +8,7 @@ La surveillance proactive des performances et de la santé (ressources matériel
 
 ## 1. Base de données Time-Series (InfluxDB)
 Le moteur InfluxDB est spécifiquement optimisé pour ingérer et stocker des données horodatées en continu.
-* **Collecte native Proxmox :** Les hyperviseurs PVE1 et PVE2 sont configurés pour pousser nativement leurs métriques (consommation CPU, utilisation RAM, I/O disques, trafic des interfaces réseau) vers cette base de données (port `<PORT_SUPERVISION>`).
+* **Collecte native Proxmox :** Les hyperviseurs PVE1 et PVE2 sont configurés pour pousser nativement leurs métriques (consommation CPU, utilisation RAM, I/O disques, trafic des interfaces réseau) vers cette base de données (port `<PORT_SUPERVISION_OLD>`).
 * **Centralisation multi-environnements :** Permet d'agréger les données de l'environnement de production et de l'environnement de laboratoire isolé en un seul point de collecte.
 
 ## 2. Visualisation (Grafana)

@@ -13,7 +13,7 @@ Pour garantir l'étanchéité des zones, des interfaces virtuelles (vmbr) distin
 
 * **`vmbr1` (Zone LAN) - `<ZONE_LAN>` :** Cœur du système d'information de PVE1.
 * **`vmbr2` (Zone DMZ) - `<ZONE_DMZ>` :** Réseau contenant la VM Reverse Proxy pour hebergement du Portfolio.
-* **`vmbr3` (Zone DMZ_SUPERV) - `10.18.0.0/16` :** Réseau contenant la VM SuperV pour Grafana et Supervision infra.
+* **`vmbr3` (Zone DMZ_SUPERV) - `<ZONE_DMZ_SUPERV>` :** Réseau contenant la VM SuperV pour Grafana et Supervision infra.
 
 ### Inventaire des Machines Virtuelles
 | ID VM | Nom d'hôte | Rôle & Services | Interface | IP Statique / DHCP |
