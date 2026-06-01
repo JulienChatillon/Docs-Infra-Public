@@ -13,17 +13,17 @@ Ce tunnel est dédié à l'administration sécurisée de l'infrastructure. Il ag
     * PC Batteur (`<IP_FIXE_BATTEUR>`)
 * **Sécurité :** Les flux provenant de ce tunnel sont gérés via l'interface `OPT1WIREGUARD`. Ils bénéficient d'un accès total à l'ensemble des réseaux (LAN, DMZ, Labo) pour garantir l'administration à distance.
 
-## 2. Interconnexion Site-to-Site (Partenaire distant)
-Ce tunnel établit un pont réseau permanent avec le réseau local d'un partenaire (<PEER_S2S>). Il est configuré selon une approche "Zero Trust" avec un cloisonnement très strict.
+## 2. Réseau VPN Collaboratif Hub & Spoke (Interconnexion multi-sites)
+Cette architecture remplace l'ancien tunnel Site-to-Site point-à-point. Le routeur frontal (pfSense-VM100) agit désormais comme un concentrateur central (Hub) permettant de relier les infrastructures de plusieurs camarades (Spokes). L'approche "Zero Trust" est maintenue avec un cloisonnement strict des flux.
 
 * **Port d'écoute :** UDP <PORT_WG_SIO>
-* **Réseau de Transit VPN :** `<ZONE_TRANSIT_WG_OLD>`
-    * Passerelle Locale (PVE1) : `<IP_FIXE_LOCALE_S2S_OLD>`
-    * Passerelle Distante (Partenaire) : `<IP_FIXE_DISTANT_S2S_OLD>`
-* **Endpoint Distant :** `<IP_FIXE_PEER_S2S>`
-* **Réseau Distant Routé :** `<ZONE_FRANCOIS_OLD>` (LAN <PEER_S2S>)
-* **Sécurité :** Les règles appliquées sur l'interface dédiée `WG_FRANCOIS` limitent le trafic entrant. Le partenaire est **exclusivement** autorisé à communiquer avec la zone `SERVEURS_LABO` (`<ZONE_SERVEURS>`) du nœud PVE2. Tout accès à la production, aux clients ou à la DMZ est bloqué.
-
-## 🔀 Spécificité de Routage (Cascade & No-NAT)
-Afin de maintenir une connectivité de bout en bout (ping LAN à LAN) entre le réseau du partenaire et le Labo isolé, le routage s'appuie sur une configuration spécifique :
-Une règle **Outbound "No-NAT"** est configurée sur le pfSense du Labo (PVE2). Ainsi, lorsque les serveurs du labo répondent au partenaire, leurs adresses IP sources d'origine (`<RESEAU_SERVEURS_LABO>.x`) sont conservées. Le pfSense Frontal (PVE1) peut alors identifier la source légitime, appliquer les règles de pare-feu correspondantes et router correctement les paquets de retour dans le tunnel Site-to-Site.
+* **Réseau de Transit VPN :** `<ZONE_TRANSIT_WG>` (Sous-réseau élargi pour permettre jusqu'à 253 pairs)
+    * Concentrateur Local (pfSense Frontal PVE1) : `<IP_FIXE_LOCALE_S2S>`
+    * Pairs Distants : `<IP_FIXE_FRANCOIS_S2S>` (<PEER_S2S>), `<RESEAU_WG_SIO>.3`, etc.
+* **Endpoint Distant :** Dynamique (Les pairs distants initient la connexion vers le Hub central)
+* **Réseaux Distants Routés (via Allowed IPs) :** * Labo <PEER_S2S> : `<ZONE_FRANCOIS>` (Zone Serveurs) et `172.21.0.0/24` (Zone Clients)
+    * *Règle d'architecture : Chaque pair doit déclarer des sous-réseaux uniques pour éviter tout conflit de routage (Overlapping IP).*
+* **Sécurité :** Les règles appliquées de haut en bas sur l'interface dédiée `WG_SIO` limitent strictement le trafic entrant :
+    * 🔴 **Bloqué :** Accès au réseau de Production (`<ZONE_LAN>`) et à la DMZ hébergeant les services exposés (`<ZONE_DMZ>`).
+    * 🟢 **Autorisé :** Communication inter-VPN (`<ZONE_TRANSIT_WG>`) pour permettre aux camarades d'interagir entre eux.
+    * 🟢 **Autorisé :** Accès exclusif aux zones de test du nœud PVE2 (`<ZONE_SERVEURS>` pour les serveurs et `<ZONE_CLIENTS>` pour les clients).
