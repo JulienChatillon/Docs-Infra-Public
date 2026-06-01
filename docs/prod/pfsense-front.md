@@ -13,6 +13,7 @@ La machine virtuelle possède plusieurs interfaces virtuelles (vmbr) pour segmen
 | **vmbr0** | `WAN` | `<ZONE_BOX>` | `<IP_FIXE_INFRA>` | Patte externe connectée à la Livebox. Reçoit le trafic public naté. |
 | **vmbr1** | `LAN_PROD` | `<ZONE_LAN>` | `<IP_FIXE_PVE1>` | Réseau de production interne et de supervision. |
 | **vmbr2** | `DMZ` | `<ZONE_DMZ>` | `<GW_DMZ>` | Zone démilitarisée isolée hébergeant le Reverse Proxy. |
+| **vmbr3** | `DMZ_SUPERV` | `10.18.0.0/16` | `10.18.0.254` | Zone démilitarisée isolée hébergeant la supervision. |
 | **WG0** | `VPN_NOMADE`| `<ZONE_WG>` | `<IP_FIXE_WG>` | Interface virtuelle du tunnel WireGuard (Administration). |
 
 ---
@@ -30,7 +31,7 @@ Ces règles gèrent les connexions initiées depuis l'extérieur vers les servic
 | Port Externe | Protocole | Service cible | Destination Interne (Machine & IP) | Rôle dans l'infrastructure |
 | :--- | :--- | :--- | :--- | :--- |
 | **80 / 443** | TCP | Serveur Web (HTTP/HTTPS) | `Debian-VM103` (`<IP_FIXE_REVPROXY>`) | Permet l'accès public sécurisé au site web (Reverse Proxy / Nginx). |
-| **<PORT_SUPERVISION>** | TCP | API / Supervision | `InfluxDB-VM102` (`<IP_FIXE_INFLUXDB>`) | Permet la collecte et l'interrogation des métriques de supervision. |
+| **3000** | TCP | Interface Supervision | `SuperV-VM102` (`10.18.0.253`) | Permet l'accès sécurisé (idéalement via VPN) au tableau de bord Grafana. |
 | **<PORT_WG_NOMADE>** | UDP | Tunnel VPN (WireGuard) | `pfSense-Front` (VM100) | Permet la connexion distante chiffrée (Accès Nomade). |
 | **<PORT_WG_SIO>** | UDP | Tunnel VPN (WireGuard) | `pfSense-Front` (VM100) & `pfSense-Labo` (VM101) | Permet la connexion distante chiffrée (Interco Site-to-Site). |
 
@@ -42,6 +43,7 @@ Le pfSense est configuré en mode **Hybrid Outbound NAT**, ce qui permet de cons
 
 | Interface de sortie | Réseau Source | Adresse de traduction (NAT) | Description / Rôle |
 | :--- | :--- | :--- | :--- |
+| **WAN** | `DMZ_SUPERV subnets` | WAN address | NAT pour accès internet DMZ_SUPERV |
 | **WAN** | `DMZ subnets` | WAN address | NAT pour accès internet DMZ |
 | **WAN** | `<ZONE_WG>` | WAN address | NAT pour accès Proxmox depuis WireGuard (Tunnel Nomade) |
 | **WAN** | `LAN subnets` | WAN address | NAT internet (Réseau de Prod principal) |
@@ -115,3 +117,16 @@ Gère le trafic provenant du routeur distant partenaire (Réseau SIO).
 | ✅ Autoriser | IPv4 | `WG_SIO subnets` | `<ZONE_SERVEURS>` | Autorise les machines des camarades à accéder à la zone SERVEURS du Labo (PVE2). |
 | ✅ Autoriser | IPv4 | `WG_SIO subnets` | `<ZONE_CLIENTS>` | Autorise les machines des camarades à accéder à la zone CLIENTS du Labo (PVE2). |
 | ✅ Autoriser | IPv4 | `* (Tout)` | `WG_SIO subnets` | Autorise les camarades connectés au VPN à communiquer entre eux. |
+
+---
+
+### 👁️ Onglet DMZ_SUPERV (Zone Supervision)
+Gère les flux de la Tour de Contrôle (Prometheus/Grafana). Cet environnement est isolé de la production et du LAN pour garantir l'étanchéité, avec des ouvertures chirurgicales strictes pour la collecte de métriques.
+
+| Action | Protocole | Source | Destination | Explication du flux |
+| :--- | :--- | :--- | :--- | :--- |
+| ✅ Autoriser | TCP | `DMZ_SUPERV subnets` | `<RESEAU_BOX>.250` (Port 9100) | Permet à Prometheus de collecter les métriques (Node Exporter) de l'hyperviseur physique pve1. |
+| ✅ Autoriser | TCP/UDP | `DMZ_SUPERV subnets` | `DMZ_SUPERV address` (Port 53) | Permet aux machines de la zone d'interroger le pfSense pour la résolution DNS. |
+| ❌ Bloquer | IPv4 | `DMZ_SUPERV subnets` | `LAN subnets` | Interdit formellement l'accès au réseau local de l'infrastructure (Sécurité). |
+| ❌ Bloquer | IPv4 | `DMZ_SUPERV subnets` | `DMZ subnets` | Interdit l'accès à la DMZ Web publique (Portfolio) pour éviter les rebonds. |
+| ✅ Autoriser | IPv4 | `DMZ_SUPERV subnets` | `*` (Any) | Autorise la VM à sortir vers Internet pour les mises à jour (APT) et le téléchargement d'images Docker. |
