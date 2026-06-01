@@ -25,14 +25,14 @@ Pour permettre la communication bidirectionnelle entre l'extérieur (WAN) et les
 
 Ces règles gèrent les connexions initiées depuis l'extérieur vers les services internes, configurées en cascade depuis la box opérateur.
 
-*Note technique : Les ports `<PORT_WG_NOMADE>` et `<PORT_WG_S2S>` (UDP) dédiés à WireGuard ne font pas l'objet d'une redirection (NAT) vers une autre machine derrière le routeur. Ils sont directement autorisés sur l'interface WAN du pfSense via une règle de pare-feu (Firewall Rule).*
+*Note technique : Les ports `<PORT_WG_NOMADE>` et `<PORT_WG_SIO>` (UDP) dédiés à WireGuard ne font pas l'objet d'une redirection (NAT) vers une autre machine derrière le routeur. Ils sont directement autorisés sur l'interface WAN du pfSense via une règle de pare-feu (Firewall Rule).*
 
 | Port Externe | Protocole | Service cible | Destination Interne (Machine & IP) | Rôle dans l'infrastructure |
 | :--- | :--- | :--- | :--- | :--- |
 | **80 / 443** | TCP | Serveur Web (HTTP/HTTPS) | `Debian-VM103` (`<IP_FIXE_REVPROXY>`) | Permet l'accès public sécurisé au site web (Reverse Proxy / Nginx). |
 | **<PORT_SUPERVISION>** | TCP | API / Supervision | `InfluxDB-VM102` (`<IP_FIXE_INFLUXDB>`) | Permet la collecte et l'interrogation des métriques de supervision. |
 | **<PORT_WG_NOMADE>** | UDP | Tunnel VPN (WireGuard) | `pfSense-Front` (VM100) | Permet la connexion distante chiffrée (Accès Nomade). |
-| **<PORT_WG_S2S>** | UDP | Tunnel VPN (WireGuard) | `pfSense-Front` (VM100) & `pfSense-Labo` (VM101) | Permet la connexion distante chiffrée (Interco Site-to-Site). |
+| **<PORT_WG_SIO>** | UDP | Tunnel VPN (WireGuard) | `pfSense-Front` (VM100) & `pfSense-Labo` (VM101) | Permet la connexion distante chiffrée (Interco Site-to-Site). |
 
 ### 2.2 NAT Sortant (Outbound ou Masquerading)
 
@@ -60,7 +60,7 @@ Gère le trafic provenant d'Internet et entrant sur le routeur frontal.
 
 | Action | Protocole | Source | Destination | Explication du flux |
 | :--- | :--- | :--- | :--- | :--- |
-| ✅ Autoriser | UDP (<PORT_WG_S2S>) | `*` (Any) | WAN Address | Autorise les requêtes externes pour établir le tunnel VPN Site-to-Site (<PEER_S2S>). |
+| ✅ Autoriser | UDP (<PORT_WG_SIO>) | `*` (Any) | WAN Address | Autorise les requêtes externes pour établir le tunnel VPN Site-to-Site (<PEER_S2S>). |
 | ✅ Autoriser | UDP (<PORT_WG_NOMADE>) | `*` (Any) | WAN Address | Autorise les requêtes externes pour établir le tunnel VPN Nomade (Julien). |
 | ✅ Autoriser | TCP (80) | `*` (Any) | `<IP_FIXE_REVPROXY>` | Redirection (NAT) du trafic web HTTP vers le Nginx Proxy Manager en DMZ. |
 | ✅ Autoriser | TCP (443) | `*` (Any) | `<IP_FIXE_REVPROXY>` | Redirection (NAT) du trafic web HTTPS sécurisé vers le Nginx Proxy Manager en DMZ. |
@@ -73,8 +73,8 @@ Gère le trafic sortant de ton réseau local principal (le LAN de Prod).
 | Action | Protocole | Source | Destination | Explication du flux |
 | :--- | :--- | :--- | :--- | :--- |
 | ✅ Autoriser | `*` | `*` | LAN Address (80/443) | **Anti-Lockout Rule** : Règle système pfSense empêchant de se bloquer soi-même l'accès à l'interface d'administration. |
-| ✅ Autoriser | IPv4 | `<ZONE_SERVEURS>` | `<ZONE_FRANCOIS>` | Autorise la zone **SERVEURS** du labo à initier des connexions vers le réseau distant de <PEER_S2S> (Routage spécifique lié au S2S). |
-| ✅ Autoriser | IPv4 | `<ZONE_CLIENTS>` | `<ZONE_FRANCOIS>` | Autorise la zone **CLIENTS** du labo à initier des connexions vers le réseau distant de <PEER_S2S>. |
+| ✅ Autoriser | IPv4 | `<ZONE_SERVEURS>` | `<ZONE_FRANCOIS_OLD>` | Autorise la zone **SERVEURS** du labo à initier des connexions vers le réseau distant de <PEER_S2S> (Routage spécifique lié au S2S). |
+| ✅ Autoriser | IPv4 | `<ZONE_CLIENTS>` | `<ZONE_FRANCOIS_OLD>` | Autorise la zone **CLIENTS** du labo à initier des connexions vers le réseau distant de <PEER_S2S>. |
 | ✅ Autoriser | IPv4 / IPv6 | LAN subnets | `*` (Any) | **Règle par défaut** (Allow LAN to any) : Autorise les machines de ce réseau de confiance à sortir librement vers Internet ou la DMZ. |
 
 ---
@@ -112,6 +112,6 @@ Gère le trafic provenant du routeur distant partenaire (Réseau de <PEER_S2S>).
 
 | Action | Protocole | Source | Destination | Explication du flux |
 | :--- | :--- | :--- | :--- | :--- |
-| ✅ Autoriser | IPv4 | `<ZONE_FRANCOIS>` | `<ZONE_SERVEURS>` | Autorise les machines de <PEER_S2S> à accéder à la zone **SERVEURS** de ton Labo. |
-| ✅ Autoriser | IPv4 | `<ZONE_FRANCOIS>` | `<ZONE_CLIENTS>` | Autorise les machines de <PEER_S2S> à accéder à la zone **CLIENTS** de ton Labo. *(Tout autre trafic vers ton LAN Prod ou la DMZ est implicitement bloqué).* |
+| ✅ Autoriser | IPv4 | `<ZONE_FRANCOIS_OLD>` | `<ZONE_SERVEURS>` | Autorise les machines de <PEER_S2S> à accéder à la zone **SERVEURS** de ton Labo. |
+| ✅ Autoriser | IPv4 | `<ZONE_FRANCOIS_OLD>` | `<ZONE_CLIENTS>` | Autorise les machines de <PEER_S2S> à accéder à la zone **CLIENTS** de ton Labo. *(Tout autre trafic vers ton LAN Prod ou la DMZ est implicitement bloqué).* |
 
