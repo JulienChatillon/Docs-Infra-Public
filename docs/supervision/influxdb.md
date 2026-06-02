@@ -20,7 +20,12 @@ Les données temporelles stockées dans Prometheus sont exploitées visuellement
 
 ## 3. Alerting & Notifications (Discord)
 Le moteur d'alerte intégré de Grafana assure une veille automatique et silencieuse sur l'état de l'infrastructure.
-* **Règles de criticité :** Les alertes sont conditionnées à des seuils d'activation persistants (ex: Température de la sonde principale > 80°C pendant plus de 5 minutes continues) pour éviter les faux positifs lors de pics de charge normaux.
+* **Règles de criticité :**
+* - Surchauffe CPU : Au dessus de 80°C
+  - Hote physique hors-ligne : Extinction d'un infrastructure
+  - Espace disque faible : Espace restant inférieur à 15G
+  - Utilisation RAM : Utilisation supérieur à 90%
+  - Charge CPU Elevée : 
 * **Intégration Webhooks :** Notification push immédiate vers un salon technique Discord dédié. Les messages utilisent le système de labels de Prometheus (ex: `job: pve1`) pour identifier précisément et instantanément l'hyperviseur ou la VM en défaut.
 
 ## 4. Sécurisation des flux
