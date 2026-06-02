@@ -15,7 +15,6 @@ Son rôle est d'isoler complètement les expérimentations du réseau de product
 ## 2. Stratégie de Routage et NAT
 Pour permettre une communication bidirectionnelle avec le réseau distant du partenaire (Site-to-Site) tout en restant derrière le pfSense de production, une règle **Outbound "No-NAT"** est configurée sur le WAN du pfSense Labo. 
 * **Trafic standard (Internet) :** NAT classique. Le pfSense masque les IP du labo derrière son IP WAN (`<IP_FIXE_PVE2>`).
-* **Trafic vers le partenaire (`<ZONE_FRANCOIS_OLD>`) :** Pas de traduction (No-NAT). Les IP sources de la zone Serveurs (`<RESEAU_SERVEURS_LABO>.x`) sont conservées pour permettre le routage de retour via le VPN de production.
 
 ## 3. Gestion DHCP (Relais et Redondance)
 Afin de centraliser la gestion du parc informatique du labo au sein du contrôleur de domaine, le service DHCP n'est pas assuré par défaut par le pare-feu :
@@ -34,8 +33,7 @@ Le port WAN de ce pfSense est connecté au réseau de production. Par défaut, t
 
 | Action | Protocole | Source | Destination | Explication du flux |
 | :--- | :--- | :--- | :--- | :--- |
-| ❌ Bloquer | `*` | Réseaux Bogon | `*` | **Règle système** : Bloque le trafic provenant d'adresses IP non routables ou réservées (Bogon networks). |
-| ✅ Autoriser | IPv4 | `<ZONE_FRANCOIS_OLD>` | `<ZONE_SERVEURS>` | Laisse entrer le trafic du VPN Site-to-Site (<PEER_S2S>) spécifiquement destiné à la zone **SERVEURS**. |
+| ✅ Autoriser | IPv4 | `WG_Classe` | `Zone_Labo` | Laisse entrer le trafic de l'alias "WG_Classe" vers les réseaux de l'alias "Zone_Labo". |
 | ✅ Autoriser | IPv4 | `Admins_Reseau` | `*` (Any) | **Exception WAN** : Autorise l'accès total au labo, conditionné par l'appartenance à l'alias `Admins_Reseau` (utilisé par le VPN Nomade). |
 
 ---
