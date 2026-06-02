@@ -4,7 +4,7 @@ Cette page détaille la configuration logique des réseaux, la répartition des 
 
 ---
 
-## 1. Nœud de Production & Front (PVE1 - `<IP_FIXE_INFRA>`)
+## 1. Nœud de Production & Front (PVE1 - `<IP_FIXE_PVE1>`)
 
 Le premier nœud gère l'entrée du trafic depuis le routeur de l'opérateur (Livebox) et héberge les services exposés.
 
@@ -19,26 +19,26 @@ Pour garantir l'étanchéité des zones, des interfaces virtuelles (vmbr) distin
 | ID VM | Nom d'hôte | Rôle & Services | Interface | IP Statique / DHCP |
 | :--- | :--- | :--- | :--- | :--- |
 | **100** | `pfSense-Front` | Routeur frontal, pare-feu principal, point d'entrée WAN | Toutes | N/A |
-| **102** | `SuperV-VM102` | Base de données temporelle pour le monitoring de l'infra | `vmbr3` | <IP_FIXE_INFLUXDB> |
+| **102** | `SuperV-VM102` | Serveur de supervision global (Prometheus & Grafana via Docker) | `vmbr3` | <IP_FIXE_SUPERV> |
 | **103** | `Debian-VM103` | Reverse Proxy hébergeant `julien-chatillon.com` | `vmbr2` | <IP_FIXE_REVPROXY> |
 
 ---
 
-## 2. Nœud de Laboratoire (PVE2 - `<IP_FIXE_PFSENSE_LABO>`)
+## 2. Nœud de Laboratoire (PVE2 - `<IP_FIXE_PVE2>`)
 
 Le PVE2 est un environnement de laboratoire strictement isolé de la production. Le routage interne est assuré de manière autonome par une instance pfSense dédiée.
 
 ### Segmentation par Ponts Virtuels (Bridges)
 Idem PVE1, des interfaces virtuelles (vmbr) distinctes ont été configurées sur Proxmox :
 
-* **`vmbr4` (Zone Serveurs) - `<ZONE_SERVEURS>` :** Cœur du système d'information du labo.
-* **`vmbr5` (Zone Clients) - `<ZONE_CLIENTS>` :** Postes de travail et environnements utilisateurs.
-* **`vmbr6` (Zone DMZ_LABO) - `<ZONE_DMZ_LABO>` :** Réseau en attente pour de futurs services exposés spécifiques au labo.
+* **`vmbr4` (Zone Serveurs) - `<ZONE_SERVEURS>` :** Cœur du système d'information du labo. - GW : <GW_SERVEURS>
+* **`vmbr5` (Zone Clients) - `<ZONE_CLIENTS>` :** Postes de travail et environnements utilisateurs. - GW : <GW_CLIENTS>
+* **`vmbr6` (Zone DMZ_LABO) - `<ZONE_DMZ_LABO>` :** Réseau en attente pour de futurs services exposés spécifiques au labo. - GW : <GW_DMZ_LABO>
 
 ### Inventaire des Machines Virtuelles
 | ID VM | Nom d'hôte | Rôle & Services | Interface | IP Statique / DHCP |
 | :--- | :--- | :--- | :--- | :--- |
-| **101** | `pfSenseLABO-VM101` | Routeur interne du labo, filtrage inter-VLANs | Toutes | N/A |
+| **101** | `pfSenseLABO-VM101` | Routeur interne du labo, filtrage inter-VLANs | Toutes | WAN : <IP_FIXE_PFSENSE_LABO> |
 | **104** | `GLPI-VM104` | Inventaire de parc et synchronisation LDAP | `vmbr4` | <IP_FIXE_GLPI> |
 | **105** | `BD-Python-VM105` | Serveur de base de données / scripts | `vmbr4` | DHCP |
 | **200** | `WinServ25-VM200` | Contrôleur de Domaine (AD), DNS, DHCP principal | `vmbr4` | <IP_FIXE_SRV25> |
