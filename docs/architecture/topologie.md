@@ -11,14 +11,14 @@ Le premier nœud gère l'entrée du trafic depuis le routeur de l'opérateur (Li
 ### Segmentation par Ponts Virtuels (Bridges)
 Pour garantir l'étanchéité des zones, des interfaces virtuelles (vmbr) distinctes ont été configurées sur Proxmox :
 
-* **`vmbr1` (Zone LAN) - `<ZONE_LAN>` :** Cœur du système d'information de PVE1.
-* **`vmbr2` (Zone DMZ) - `<ZONE_DMZ>` :** Réseau contenant la VM Reverse Proxy pour hebergement du Portfolio.
-* **`vmbr3` (Zone DMZ_SUPERV) - `<ZONE_DMZ_SUPERV>` :** Réseau contenant la VM SuperV pour Grafana et Supervision infra.
+* **`vmbr1` (Zone LAN) - `<ZONE_LAN>` :** Cœur du système d'information de PVE1. - GW : <IP_FIXE_PFSENSE>
+* **`vmbr2` (Zone DMZ) - `<ZONE_DMZ>` :** Réseau contenant la VM Reverse Proxy pour hebergement du Portfolio. - GW : <GW_DMZ>
+* **`vmbr3` (Zone DMZ_SUPERV) - `<ZONE_DMZ_SUPERV>` :** Réseau contenant la VM SuperV pour Grafana et Supervision infra. - GW : <GW_DMZ_SUPERV>
 
 ### Inventaire des Machines Virtuelles
 | ID VM | Nom d'hôte | Rôle & Services | Interface | IP Statique / DHCP |
 | :--- | :--- | :--- | :--- | :--- |
-| **100** | `pfSense-Front` | Routeur frontal, pare-feu principal, point d'entrée WAN | Toutes | N/A |
+| **100** | `pfSense-Front` | Routeur frontal, pare-feu principal, point d'entrée WAN | Toutes | WAN : <IP_FIXE_INFRA> |
 | **102** | `SuperV-VM102` | Serveur de supervision global (Prometheus & Grafana via Docker) | `vmbr3` | <IP_FIXE_SUPERV> |
 | **103** | `Debian-VM103` | Reverse Proxy hébergeant `julien-chatillon.com` | `vmbr2` | <IP_FIXE_REVPROXY> |
 
