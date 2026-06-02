@@ -22,4 +22,4 @@ Rréférentiel de documentation de mon infrastructure informatique. Base de conn
 * [Gestion de parc et synchronisation LDAP (GLPI)](docs/labo/glpi.md)
 
 ### 👁️ 4. Supervision & Sécurité
-* [Monitoring et métriques (InfluxDB)](docs/supervision/influxdb.md)
+* [Monitoring et métriques (Prometheus)](docs/supervision/superv.md)
