@@ -112,11 +112,14 @@ Gère le trafic provenant du routeur distant partenaire (Réseau SIO).
 
 | Action | Protocole | Source | Destination | Explication du flux |
 | :--- | :--- | :--- | :--- | :--- |
+| ❌ Bloquer | IPv4 | `WG_SIO subnets` | `any` | Intérupteur pour couper la liaison |
 | ❌ Bloquer | IPv4 | `WG_SIO subnets` | `<ZONE_LAN>` | Interdit l'accès au réseau de PRODUCTION (PVE1). |
 | ❌ Bloquer | IPv4 | `WG_SIO subnets` | `<ZONE_DMZ>` | Interdit l'accès à la zone DMZ (Portfolio). |
 | ✅ Autoriser | IPv4 | `WG_SIO subnets` | `<ZONE_SERVEURS>` | Autorise les machines des camarades à accéder à la zone SERVEURS du Labo (PVE2). |
 | ✅ Autoriser | IPv4 | `WG_SIO subnets` | `<ZONE_CLIENTS>` | Autorise les machines des camarades à accéder à la zone CLIENTS du Labo (PVE2). |
 | ✅ Autoriser | IPv4 | `* (Tout)` | `WG_SIO subnets` | Autorise les camarades connectés au VPN à communiquer entre eux. |
+
+La règle de l'interupteur est désactivée et est la en cas de problème pour couper tout traffic entrant via WG_SIO
 
 ---
 
