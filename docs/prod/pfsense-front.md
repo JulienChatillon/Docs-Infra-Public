@@ -11,7 +11,7 @@ La machine virtuelle possède plusieurs interfaces virtuelles (vmbr) pour segmen
 | Interface | Nom pfSense | Réseau / CIDR | IP de l'interface (Passerelle) | Rôle |
 | :--- | :--- | :--- | :--- | :--- |
 | **vmbr0** | `WAN` | `<ZONE_BOX>` | `<IP_FIXE_INFRA>` | Patte externe connectée à la Livebox. Reçoit le trafic public naté. |
-| **vmbr1** | `LAN_PROD` | `<ZONE_LAN>` | `<IP_FIXE_PVE1>` | Réseau de production interne et de supervision. |
+| **vmbr1** | `LAN_PROD` | `<ZONE_LAN>` | `<IP_FIXE_PFSENSE>` | Réseau de production interne et de supervision. |
 | **vmbr2** | `DMZ` | `<ZONE_DMZ>` | `<GW_DMZ>` | Zone démilitarisée isolée hébergeant le Reverse Proxy. |
 | **vmbr3** | `DMZ_SUPERV` | `<ZONE_DMZ_SUPERV>` | `<GW_DMZ_SUPERV>` | Zone démilitarisée isolée hébergeant la supervision. |
 | **WG0** | `VPN_NOMADE`| `<ZONE_WG>` | `<IP_FIXE_WG>` | Interface virtuelle du tunnel WireGuard (Administration). |
@@ -125,7 +125,7 @@ Gère les flux de la Tour de Contrôle (Prometheus/Grafana). Cet environnement e
 
 | Action | Protocole | Source | Destination | Explication du flux |
 | :--- | :--- | :--- | :--- | :--- |
-| ✅ Autoriser | TCP | `DMZ_SUPERV subnets` | `<IP_FIXE_PROXMOX>` (Port 9100) | Permet à Prometheus de collecter les métriques (Node Exporter) de l'hyperviseur physique pve1. |
+| ✅ Autoriser | TCP | `DMZ_SUPERV subnets` | `<IP_FIXE_PVE1>` (Port 9100) | Permet à Prometheus de collecter les métriques (Node Exporter) de l'hyperviseur physique pve1. |
 | ✅ Autoriser | TCP/UDP | `DMZ_SUPERV subnets` | `DMZ_SUPERV address` (Port 53) | Permet aux machines de la zone d'interroger le pfSense pour la résolution DNS. |
 | ❌ Bloquer | IPv4 | `DMZ_SUPERV subnets` | `LAN subnets` | Interdit formellement l'accès au réseau local de l'infrastructure (Sécurité). |
 | ❌ Bloquer | IPv4 | `DMZ_SUPERV subnets` | `DMZ subnets` | Interdit l'accès à la DMZ Web publique (Portfolio) pour éviter les rebonds. |

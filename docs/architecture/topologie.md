@@ -24,7 +24,7 @@ Pour garantir l'étanchéité des zones, des interfaces virtuelles (vmbr) distin
 
 ---
 
-## 2. Nœud de Laboratoire (PVE2 - `<IP_FIXE_PVE2>`)
+## 2. Nœud de Laboratoire (PVE2 - `<IP_FIXE_PFSENSE_LABO>`)
 
 Le PVE2 est un environnement de laboratoire strictement isolé de la production. Le routage interne est assuré de manière autonome par une instance pfSense dédiée.
 

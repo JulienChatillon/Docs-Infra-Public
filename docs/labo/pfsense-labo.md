@@ -14,7 +14,7 @@ Son rôle est d'isoler complètement les expérimentations du réseau de product
 
 ## 2. Stratégie de Routage et NAT
 Pour permettre une communication bidirectionnelle avec le réseau distant du partenaire (Site-to-Site) tout en restant derrière le pfSense de production, une règle **Outbound "No-NAT"** est configurée sur le WAN du pfSense Labo. 
-* **Trafic standard (Internet) :** NAT classique. Le pfSense masque les IP du labo derrière son IP WAN (`<IP_FIXE_PVE2>`).
+* **Trafic standard (Internet) :** NAT classique. Le pfSense masque les IP du labo derrière son IP WAN (`<IP_FIXE_PFSENSE_LABO>`).
 
 ## 3. Gestion DHCP (Relais et Redondance)
 Afin de centraliser la gestion du parc informatique du labo au sein du contrôleur de domaine, le service DHCP n'est pas assuré par défaut par le pare-feu :
