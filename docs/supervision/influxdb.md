@@ -21,7 +21,7 @@ Les données temporelles stockées dans Prometheus sont exploitées visuellement
 ## 3. Alerting & Notifications (Discord)
 Le moteur d'alerte intégré de Grafana assure une veille automatique et silencieuse sur l'état de l'infrastructure.
 * **Règles de criticité :**
-* - Surchauffe CPU : Au dessus de 80°C
+  - Surchauffe CPU : Au dessus de 80°C
   - Hote physique hors-ligne : Extinction d'un infrastructure
   - Espace disque faible : Espace restant inférieur à 15G
   - Utilisation RAM : Utilisation supérieur à 90%
