@@ -11,6 +11,7 @@ Le premier nœud gère l'entrée du trafic depuis le routeur de l'opérateur (Li
 ### Segmentation par Ponts Virtuels (Bridges)
 Pour garantir l'étanchéité des zones, des interfaces virtuelles (vmbr) distinctes ont été configurées sur Proxmox :
 
+* **`vmbr0` (Zone WAN) - `<ZONE_BOX>` :** Liaison directe avec le routeur de l'opérateur (Livebox). Fournit l'accès Internet public au pfSense-Front. - GW : <RESEAU_BOX>.1
 * **`vmbr1` (Zone LAN) - `<ZONE_LAN>` :** Cœur du système d'information de PVE1. - GW : <IP_FIXE_PFSENSE>
 * **`vmbr2` (Zone DMZ) - `<ZONE_DMZ>` :** Réseau contenant la VM Reverse Proxy pour hebergement du Portfolio. - GW : <GW_DMZ>
 * **`vmbr3` (Zone DMZ_SUPERV) - `<ZONE_DMZ_SUPERV>` :** Réseau contenant la VM SuperV pour Grafana et Supervision infra. - GW : <GW_DMZ_SUPERV>
