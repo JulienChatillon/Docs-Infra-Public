@@ -3,8 +3,8 @@
 La surveillance proactive des performances matérielles (CPU, RAM, Températures, Disques) et réseau de l'ensemble de l'infrastructure est centralisée sur une "Tour de Contrôle" dédiée. Cette architecture de monitoring a migré vers un modèle moderne de type "Pull", garantissant une visibilité totale tout en respectant une isolation stricte des environnements.
 
 * **Machine Virtuelle :** `Superv` (Debian + Docker : Prometheus, Grafana)
-* **Adresse IP :** `<IP_FIXE_SUPERV>`
-* **Zone Réseau :** `DMZ_SUPERV` (<ZONE_DMZ_SUPERV>) - Sous-réseau strictement isolé de la Production et de la DMZ Publique.
+* **Adresse IP :** `10.10.18.253`
+* **Zone Réseau :** `DMZ_SUPERV` (10.10.18.0/16) - Sous-réseau strictement isolé de la Production et de la DMZ Publique.
 
 ## 1. Collecte des métriques (Node Exporter & Prometheus)
 Le moteur d'ingestion historique (InfluxDB) a été remplacé par **Prometheus**, qui interroge régulièrement les cibles pour récupérer leurs constantes vitales.
