@@ -11,10 +11,10 @@ La machine virtuelle possède plusieurs interfaces virtuelles (vmbr) pour segmen
 | Interface | Nom pfSense | Réseau / CIDR | IP de l'interface (Passerelle) | Rôle |
 | :--- | :--- | :--- | :--- | :--- |
 | **vmbr0** | `WAN` | `<ZONE_BOX>` | `<IP_FIXE_INFRA>` | Patte externe connectée à la Livebox. Reçoit le trafic public naté. |
-| **vmbr1** | `LAN_PROD` | `<RESEAU_PVE1>.0/24` | `<IP_FIXE_PFSENSE>` | Réseau de production interne et de supervision. |
-| **vmbr2** | `DMZ` | `10.10.19.0/24` | `10.10.19.254` | Zone démilitarisée isolée hébergeant le Reverse Proxy. |
-| **vmbr3** | `DMZ_SUPERV` | `10.10.18.0/24` | `10.10.18.254` | Zone démilitarisée isolée hébergeant la supervision. |
-| **WG0** | `VPN_NOMADE`| `<ZONE_WG>` | `<IP_FIXE_WG>` | Interface virtuelle du tunnel WireGuard (Administration). |
+| **vmbr1** | `LAN_PROD` | `<ZONE_LAN>` | `<IP_FIXE_PFSENSE>` | Réseau de production interne et de supervision. |
+| **vmbr2** | `DMZ` | `<ZONE_DMZ>` | `<GW_DMZ>` | Zone démilitarisée isolée hébergeant le Reverse Proxy. |
+| **vmbr3** | `DMZ_SUPERV` | `<ZONE_DMZ_SUPERV>` | `<GW_DMZ_SUPERV>` | Zone démilitarisée isolée hébergeant la supervision. |
+| **WG0** | `VPN_NOMADE`| `<ZONE_WG_NOMADE>` | `<IP_FIXE_WG>` | Interface virtuelle du tunnel WireGuard (Administration). |
 
 ---
 
@@ -30,8 +30,8 @@ Ces règles gèrent les connexions initiées depuis l'extérieur vers les servic
 
 | Port Externe | Protocole | Service cible | Destination Interne (Machine & IP) | Rôle dans l'infrastructure |
 | :--- | :--- | :--- | :--- | :--- |
-| **80 / 443** | TCP | Serveur Web (HTTP/HTTPS) | `Debian-VM103` (`10.10.19.251`) | Permet l'accès public sécurisé au site web (Reverse Proxy / Nginx). |
-| **<PORT_SUPERVISION>** | TCP | Interface Supervision | `SuperV-VM102` (`10.10.18.253`) | Permet l'accès sécurisé (idéalement via VPN) au tableau de bord Grafana. |
+| **80 / 443** | TCP | Serveur Web (HTTP/HTTPS) | `Debian-VM103` (`<IP_FIXE_REVPROXY>`) | Permet l'accès public sécurisé au site web (Reverse Proxy / Nginx). |
+| **<PORT_SUPERVISION>** | TCP | Interface Supervision | `SuperV-VM102` (`<IP_FIXE_SUPERV>`) | Permet l'accès sécurisé (idéalement via VPN) au tableau de bord Grafana. |
 | **<PORT_WG_NOMADE>** | UDP | Tunnel VPN (WireGuard) | `pfSense-Front` (VM100) | Permet la connexion distante chiffrée (Accès Nomade). |
 | **<PORT_WG_SIO>** | UDP | Tunnel VPN (WireGuard) | `pfSense-Front` (VM100) & `pfSense-Labo` (VM101) | Permet la connexion distante chiffrée (Interco Site-to-Site). |
 
@@ -45,7 +45,7 @@ Le pfSense est configuré en mode **Hybrid Outbound NAT**, ce qui permet de cons
 | :--- | :--- | :--- | :--- |
 | **WAN** | `DMZ_SUPERV subnets` | WAN address | NAT pour accès internet DMZ_SUPERV |
 | **WAN** | `DMZ subnets` | WAN address | NAT pour accès internet DMZ |
-| **WAN** | `<ZONE_WG>` | WAN address | NAT pour accès Proxmox depuis WireGuard (Tunnel Nomade) |
+| **WAN** | `<ZONE_WG_NOMADE>` | WAN address | NAT pour accès Proxmox depuis WireGuard (Tunnel Nomade) |
 | **WAN** | `LAN subnets` | WAN address | NAT internet (Réseau de Prod principal) |
 | **WAN** | `<ZONE_SERVEURS>` | WAN address | NAT pour accès internet LABO (Zone Serveurs) |
 
@@ -64,8 +64,8 @@ Gère le trafic provenant d'Internet et entrant sur le routeur frontal.
 | :--- | :--- | :--- | :--- | :--- |
 | ✅ Autoriser | UDP (<PORT_WG_SIO>) | `*` (Any) | WAN Address | Autorise les requêtes externes pour établir le tunnel VPN Site-to-Site (SIO). |
 | ✅ Autoriser | UDP (<PORT_WG_NOMADE>) | `*` (Any) | WAN Address | Autorise les requêtes externes pour établir le tunnel VPN Nomade (Julien). |
-| ✅ Autoriser | TCP (80) | `*` (Any) | `10.10.19.251` | Redirection (NAT) du trafic web HTTP vers le Nginx Proxy Manager en DMZ. |
-| ✅ Autoriser | TCP (443) | `*` (Any) | `10.10.19.251` | Redirection (NAT) du trafic web HTTPS sécurisé vers le Nginx Proxy Manager en DMZ. |
+| ✅ Autoriser | TCP (80) | `*` (Any) | `<IP_FIXE_REVPROXY>` | Redirection (NAT) du trafic web HTTP vers le Nginx Proxy Manager en DMZ. |
+| ✅ Autoriser | TCP (443) | `*` (Any) | `<IP_FIXE_REVPROXY>` | Redirection (NAT) du trafic web HTTPS sécurisé vers le Nginx Proxy Manager en DMZ. |
 
 ---
 
@@ -113,8 +113,8 @@ Gère le trafic provenant du routeur distant partenaire (Réseau SIO).
 | Action | Protocole | Source | Destination | Explication du flux |
 | :--- | :--- | :--- | :--- | :--- |
 | ❌ Bloquer | IPv4 | `WG_SIO subnets` | `any` | Intérupteur pour couper la liaison |
-| ❌ Bloquer | IPv4 | `WG_SIO subnets` | `<RESEAU_PVE1>.0/24` | Interdit l'accès au réseau de PRODUCTION (PVE1). |
-| ❌ Bloquer | IPv4 | `WG_SIO subnets` | `10.10.19.0/24` | Interdit l'accès à la zone DMZ (Portfolio). |
+| ❌ Bloquer | IPv4 | `WG_SIO subnets` | `<ZONE_LAN>` | Interdit l'accès au réseau de PRODUCTION (PVE1). |
+| ❌ Bloquer | IPv4 | `WG_SIO subnets` | `<ZONE_DMZ>` | Interdit l'accès à la zone DMZ (Portfolio). |
 | ✅ Autoriser | IPv4 | `WG_SIO subnets` | `<ZONE_SERVEURS>` | Autorise les machines des camarades à accéder à la zone SERVEURS du Labo (PVE2). |
 | ✅ Autoriser | IPv4 | `WG_SIO subnets` | `<ZONE_CLIENTS>` | Autorise les machines des camarades à accéder à la zone CLIENTS du Labo (PVE2). |
 | ✅ Autoriser | IPv4 | `* (Tout)` | `WG_SIO subnets` | Autorise les camarades connectés au VPN à communiquer entre eux. |

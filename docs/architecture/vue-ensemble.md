@@ -34,7 +34,7 @@ L'ensemble de l'infrastructure est virtualisé sous **Proxmox VE**, réparti sur
 
 ### A. Nœud de Production (PVE1)
 Ce nœud est exposé à Internet (via une redirection Livebox) et gère les services accessibles de l'extérieur.
-* **Réseau :** LAN <RESEAU_PVE1>.0/24.
+* **Réseau :** LAN <ZONE_LAN>.
 * **Services clés :** pfSense (Frontal), Reverse Proxy (Nginx Proxy Manager), Supervision (InfluxDB).
 * **Domaine public :** `julien-chatillon.com` (Hébergement statique).
 
