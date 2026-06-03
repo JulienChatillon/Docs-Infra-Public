@@ -19,11 +19,13 @@ Cette architecture remplace l'ancien tunnel Site-to-Site point-à-point. Le rout
 * **Port d'écoute :** UDP <PORT_WG_SIO>
 * **Réseau de Transit VPN :** `<ZONE_TRANSIT_WG>` (Sous-réseau élargi pour permettre jusqu'à 253 pairs)
     * Concentrateur Local (pfSense Frontal PVE1) : `<IP_FIXE_LOCALE_S2S>`
-    * Pairs Distants : `<IP_FIXE_FRANCOIS_S2S>` (<PEER_S2S>), `<RESEAU_WG_SIO>.3`, etc.
+    * Pairs Distants : `<IP_FIXE_FRANCOIS_S2S>` (<PEER_S2S>), `<RESEAU_WG_SIO>.3` (Batteuse), etc.
 * **Endpoint Distant :** Dynamique (Les pairs distants initient la connexion vers le Hub central)
-* **Réseaux Distants Routés (via Allowed IPs) :** * Labo <PEER_S2S> : `<ZONE_SERVEUR_FRANCOIS>` (Zone Serveurs) et `<ZONE_CLIENT_FRANCOIS>` (Zone Clients)
+* **Réseaux Distants Routés (via Allowed IPs) :**
+ - Labo <PEER_S2S> : `10.20.0.0/16` (Zone Serveurs) et `10.21.0.0/16` (Zone Clients)
+ - Labo Batteuse : `10.0.0.0/16` à `10.9.0.0/16`
     * *Règle d'architecture : Chaque pair doit déclarer des sous-réseaux uniques pour éviter tout conflit de routage (Overlapping IP).*
 * **Sécurité :** Les règles appliquées de haut en bas sur l'interface dédiée `WG_SIO` limitent strictement le trafic entrant :
-    * 🔴 **Bloqué :** Accès au réseau de Production (`<ZONE_LAN>`) et à la DMZ hébergeant les services exposés (`<ZONE_DMZ>`).
+    * 🔴 **Bloqué :** Accès au réseau de Production (`<ZONE_LAN>`) et à la DMZ hébergeant les services exposés (`10.10.19.0/24`).
     * 🟢 **Autorisé :** Communication inter-VPN (`<ZONE_TRANSIT_WG>`) pour permettre aux camarades d'interagir entre eux.
     * 🟢 **Autorisé :** Accès exclusif aux zones de test du nœud PVE2 (`<ZONE_SERVEURS>` pour les serveurs et `<ZONE_CLIENTS>` pour les clients).
