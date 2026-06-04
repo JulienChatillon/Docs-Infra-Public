@@ -133,3 +133,16 @@ Gère les flux de la Tour de Contrôle (Prometheus/Grafana). Cet environnement e
 | ❌ Bloquer | IPv4 | `DMZ_SUPERV subnets` | `LAN subnets` | Interdit formellement l'accès au réseau local de l'infrastructure (Sécurité). |
 | ❌ Bloquer | IPv4 | `DMZ_SUPERV subnets` | `DMZ subnets` | Interdit l'accès à la DMZ Web publique (Portfolio) pour éviter les rebonds. |
 | ✅ Autoriser | IPv4 | `DMZ_SUPERV subnets` | `*` (Any) | Autorise la VM à sortir vers Internet pour les mises à jour (APT) et le téléchargement d'images Docker. |
+
+---
+
+## 4. Résolution DNS (Host Overrides)
+
+Une résolution DNS à été mise en place dans le Pfsense pour accéder à différente pages web via un nom au lieu de son adresse IP.
+
+| Host | Parent domain | IP Host | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| grafana | julien.lan | `<IP_FIXE_SUPERV>` | DNS Local - Serveur Supervision Grafana |
+| nginx | julien.lan | `<IP_FIXE_REVPROXY>` | DNS Local - Serveur NGinx |
+| pfsense | julien.lan | `<IP_FIXE_PFSENSE>` | DNS Local - Interface Web Pare-feu |
+| proxmox | julien.lan | `<IP_FIXE_PVE1>` | DNS Local - Interface Web Proxmox |
