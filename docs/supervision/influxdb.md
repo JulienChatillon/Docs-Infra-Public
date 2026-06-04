@@ -4,7 +4,7 @@ La surveillance proactive des performances matérielles (CPU, RAM, Températures
 
 * **Machine Virtuelle :** `Superv` (Debian + Docker : Prometheus, Grafana)
 * **Adresse IP :** `<IP_FIXE_SUPERV>`
-* **Zone Réseau :** `DMZ_SUPERV` (<RESEAU_DMZ2>.0/16) - Sous-réseau strictement isolé de la Production et de la DMZ Publique.
+* **Zone Réseau :** `DMZ_SUPERV` (<ZONE_DMZ_SUPERV>) - Sous-réseau strictement isolé de la Production et de la DMZ Publique.
 
 ## 1. Collecte des métriques (Node Exporter & Prometheus)
 Le moteur d'ingestion historique (InfluxDB) a été remplacé par **Prometheus**, qui interroge régulièrement les cibles pour récupérer leurs constantes vitales.
