@@ -141,7 +141,7 @@ Gère les flux de la Tour de Contrôle (Prometheus/Grafana). Cet environnement e
 Une résolution DNS à été mise en place dans le Pfsense pour accéder à différente pages web via un nom au lieu de son adresse IP.
 
 | Host | Parent domain | IP Host | Description |
-| :--- | :--- | :--- | :--- | :--- |
+| :--- | :--- | :--- | :--- |
 | grafana | julien.lan | `<IP_FIXE_SUPERV>` | DNS Local - Serveur Supervision Grafana |
 | nginx | julien.lan | `<IP_FIXE_REVPROXY>` | DNS Local - Serveur NGinx |
 | pfsense | julien.lan | `<IP_FIXE_PFSENSE>` | DNS Local - Interface Web Pare-feu |
