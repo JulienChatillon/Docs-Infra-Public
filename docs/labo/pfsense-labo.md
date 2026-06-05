@@ -33,6 +33,7 @@ Le port WAN de ce pfSense est connecté au réseau de production. Par défaut, t
 
 | Action | Protocole | Source | Destination | Explication du flux |
 | :--- | :--- | :--- | :--- | :--- |
+| ✅ Autoriser | IPv4 | `<ZONE_LAN>` | `Wan_address` | Laisse entrer le trafic DNS (53) du réseau front vers les réseaux de Labo. |
 | ✅ Autoriser | IPv4 | `WG_Classe` | `Zone_Labo` | Laisse entrer le trafic de l'alias "WG_Classe" vers les réseaux de l'alias "Zone_Labo". |
 | ✅ Autoriser | IPv4 | `Admins_Reseau` | `*` (Any) | **Exception WAN** : Autorise l'accès total au labo, conditionné par l'appartenance à l'alias `Admins_Reseau` (utilisé par le VPN Nomade). |
 
