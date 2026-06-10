@@ -94,7 +94,6 @@ Cet onglet est un groupe d'interfaces. Les règles ici s'appliquent à tous les 
 
 | Action | Protocole | Source | Destination | Explication du flux |
 | :--- | :--- | :--- | :--- | :--- |
-| ✅ Autoriser | IPv4 | `*` | `*` | Autorise le trafic à traverser le service WireGuard de manière globale. *(Note : La sécurité fine est ensuite déléguée aux onglets spécifiques de chaque tunnel).* |
 
 ---
 
