@@ -35,16 +35,20 @@ Idem PVE1, des interfaces virtuelles (vmbr) distinctes ont été configurées su
 * **`vmbr4` (Zone Serveurs) - `<ZONE_SERVEURS>` :** Cœur du système d'information du labo. - GW : <GW_SERVEURS>
 * **`vmbr5` (Zone Clients) - `<ZONE_CLIENTS>` :** Postes de travail et environnements utilisateurs. - GW : <GW_CLIENTS>
 * **`vmbr6` (Zone DMZ_LABO) - `<ZONE_DMZ_LABO>` :** Réseau en attente pour de futurs services exposés spécifiques au labo. - GW : <GW_DMZ_LABO>
+* **`vmbr10` (Zone Serveurs 2) - `172.16.10.0/24` :** Réseau serveurs pour architecture Linux. - GW : 172.16.10.254
+* **`vmbr11` (Zone Clients 2) - `172.16.20.0/24` :** Réseau clients pour architecture Linux. - GW : 172.16.20.254
 
 ### Inventaire des Machines Virtuelles
 | ID VM | Nom d'hôte | Rôle & Services | Interface | IP Statique / DHCP |
 | :--- | :--- | :--- | :--- | :--- |
-| **101** | `pfSenseLABO-VM101` | Routeur interne du labo, filtrage inter-VLANs | Toutes | WAN : <IP_FIXE_PFSENSE_LABO> |
+| **101** | `pfSenseLABO-VM101` | Routeur interne du labo, filtrage inter-VLANs | `vmbr4 à 6`| WAN : <IP_FIXE_PFSENSE_LABO> |
 | **104** | `GLPI-VM104` | Inventaire de parc et synchronisation LDAP | `vmbr4` | <IP_FIXE_GLPI> |
 | **105** | `BD-Python-VM105` | Serveur de base de données / scripts | `vmbr4` | DHCP |
 | **200** | `WinServ25-VM200` | Contrôleur de Domaine (AD), DNS, DHCP principal | `vmbr4` | <IP_FIXE_SRV25> |
 | **201** | `Win11-Client01-VM201`| Poste client Windows intégré au domaine | `vmbr5` | DHCP |
 | **202** | `WinServSec-VM202` | Contrôleur de Domaine de secours (AD), DNS, DHCP | `vmbr4` | <IP_FIXE_SRV25SEC> |
-| **300** | `TP-Linux-VM300` | Poste client / Machine de test Linux | `vmbr5` | DHCP |
+| **300** | `TP-Linux-VM300` | Poste client / Machine de test Linux | `vmbr11` | DHCP |
+| **302** | `Routeur-Linux` | Routeur interne architecture Linux | `vmbr10 et 11` | WAN : <IP_FIXE_INFLUXDB> |
+| **303** | `Lin-Serv-DHCP` | Serveur DHCP/DNS architecture Linux | `vmbr10` | 172.16.10.253 |
 
 ---
