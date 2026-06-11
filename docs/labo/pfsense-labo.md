@@ -11,6 +11,8 @@ Son rôle est d'isoler complètement les expérimentations du réseau de product
 | **vmbr4** | `SERVEURS` | `<ZONE_SERVEURS>` | `<GW_SERVEURS>` | Zone névralgique hébergeant l'infrastructure de base (AD, DNS, Monitoring Wazuh, GLPI). |
 | **vmbr5** | `CLIENTS` | `<ZONE_CLIENTS>` | `<GW_CLIENTS>` | Réseau utilisateur simulant un parc informatique (Postes Windows 11, machines Linux). |
 | **vmbr6** | `DMZ_LABO`| `<ZONE_DMZ_LABO>` | `<GW_DMZ_LABO>` | Zone isolée en attente pour l'exposition de futurs services de test. |
+| **vmbr10** | `SERVEURS_2`| `<ZONE_SERVEURS_2>` | `<GW_SERVEURS_2>` | Zone Serveur avec infrastructure Linux. |
+| **vmbr11** | `CLIENTS_2`| `<ZONE_CLIENTS_2>` | `<GW_CLIENTS_2>` | Zone Client avec infrastructure Linux. |
 
 ## 2. Stratégie de Routage et NAT
 Pour permettre une communication bidirectionnelle avec le réseau distant du partenaire (Site-to-Site) tout en restant derrière le pfSense de production, une règle **Outbound "No-NAT"** est configurée sur le WAN du pfSense Labo. 
