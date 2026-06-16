@@ -16,10 +16,14 @@ Rréférentiel de documentation de mon infrastructure informatique. Base de conn
 * [Hébergement Web & DMZ (Nginx Proxy Manager)](docs/prod/reverse-proxy.md)
 * [Interconnexion WireGuard (Nomade & Site-to-Site)](docs/prod/wireguard.md)
 
-### 🧪 3. Environnement de Laboratoire (PVE2)
+### 🧪 3. Environnement de Laboratoire (PVE2) - Windows
 * [Routage interne et Pare-feu : pfSense Labo](docs/labo/pfsense-labo.md)
 * [Cœur de réseau : Active Directory, DNS & DHCP (Windows Server)](docs/labo/ad-services.md)
 * [Gestion de parc et synchronisation LDAP (GLPI)](docs/labo/glpi.md)
 
-### 👁️ 4. Supervision & Sécurité
+### 🧪 4. Environnement de Laboratoire (PVE2) - Linux
+* [Routage interne et Pare-feu : Routeur Linux Labo](docs/labo/linux-labo.md)
+* [Cœur de réseau : Active Directory, DNS & DHCP (Windows Server)](docs/labo/ad-services.md)
+
+### 👁️ 5. Supervision & Sécurité
 * [Monitoring et métriques (Prometheus)](docs/supervision/influxdb.md)
