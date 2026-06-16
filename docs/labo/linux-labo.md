@@ -38,4 +38,4 @@ Le pare-feu inspecte et filtre le trafic transitant à travers le routeur entre 
 | ✅ Autoriser | `IPv4` | `<ZONE_SERVEURS_2>` & `<ZONE_CLIENTS_2>` | `WAN / Internet` | Laisse sortir le trafic des zones internes vers l'extérieur (couplé au *Masquerading* / suivi de connexion ESTABLISHED). |
 | ✅ Autoriser | `UDP` | `vmbr11` (Clients) | `Lin-Serv-DHCP-VM303:67` | Autorise le transfert des trames DHCP par l'agent relais vers le serveur dnsmasq. |
 | ✅ Autoriser | `TCP/UDP` | `vmbr11` (Clients) | `Lin-Serv-DHCP-VM303:53` | Autorise les requêtes DNS des clients vers le serveur d'infrastructure. |
-| ❌ Bloquer | `IPv4` | `WAN` | `172.16.0.0/16` | Par défaut, rejette toute tentative de connexion initiée depuis l'extérieur vers le labo Linux. |
+| ❌ Bloquer | `IPv4` | `WAN` | `<A DEFINIR>` | Par défaut, rejette toute tentative de connexion initiée depuis l'extérieur vers le labo Linux. |
