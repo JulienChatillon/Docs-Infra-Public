@@ -23,7 +23,7 @@ Rréférentiel de documentation de mon infrastructure informatique. Base de conn
 
 ### 🐧 4. Environnement de Laboratoire (PVE2) - Linux
 * [Routage interne et Pare-feu : Routeur Linux Labo](docs/labo/linux-labo.md)
-* [Cœur de réseau : Active Directory, DNS & DHCP (Windows Server)](docs/labo/ad-services.md)
+* [Cœur de réseau : Active Directory, DNS & DHCP (Windows Server)](docs/labo/lin-services.md)
 
 ### 👁️ 5. Supervision & Sécurité
 * [Monitoring et métriques (Prometheus)](docs/supervision/influxdb.md)
