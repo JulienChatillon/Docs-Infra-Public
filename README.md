@@ -21,7 +21,7 @@ Rréférentiel de documentation de mon infrastructure informatique. Base de conn
 * [Cœur de réseau : Active Directory, DNS & DHCP (Windows Server)](docs/labo/ad-services.md)
 * [Gestion de parc et synchronisation LDAP (GLPI)](docs/labo/glpi.md)
 
-### 🧪 4. Environnement de Laboratoire (PVE2) - Linux
+### 🐧 4. Environnement de Laboratoire (PVE2) - Linux
 * [Routage interne et Pare-feu : Routeur Linux Labo](docs/labo/linux-labo.md)
 * [Cœur de réseau : Active Directory, DNS & DHCP (Windows Server)](docs/labo/ad-services.md)
 
