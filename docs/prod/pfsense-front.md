@@ -11,7 +11,7 @@ La machine virtuelle possède plusieurs interfaces virtuelles (vmbr) pour segmen
 | Interface | Nom pfSense | Réseau / CIDR | IP de l'interface (Passerelle) | Rôle |
 | :--- | :--- | :--- | :--- | :--- |
 | **vmbr0** | `WAN` | `<ZONE_BOX>` | `<IP_FIXE_INFRA>` | Patte externe connectée à la Livebox. Reçoit le trafic public naté. |
-| **vmbr1** | `LAN_PROD` | `<ZONE_LAN>` | `<IP_FIXE_PFSENSE>` | Réseau de production interne et de supervision. |
+| **vmbr1** | `LAN_PROD` | `<ZONE_LAN>` | `<GW_LAN>` | Réseau de production interne et de supervision. |
 | **vmbr2** | `DMZ` | `<ZONE_DMZ>` | `<GW_DMZ>` | Zone démilitarisée isolée hébergeant le Reverse Proxy. |
 | **vmbr3** | `DMZ_SUPERV` | `<ZONE_DMZ_SUPERV>` | `<GW_DMZ_SUPERV>` | Zone démilitarisée isolée hébergeant la supervision. |
 | **WG0** | `VPN_NOMADE`| `<ZONE_WG_NOMADE>` | `<IP_FIXE_WG>` | Interface virtuelle du tunnel WireGuard (Administration). |
@@ -143,5 +143,5 @@ Une résolution DNS à été mise en place dans le Pfsense pour accéder à diff
 | :--- | :--- | :--- | :--- |
 | grafana | julien.lan | `<IP_FIXE_SUPERV>` | DNS Local - Serveur Supervision Grafana |
 | nginx | julien.lan | `<IP_FIXE_REVPROXY>` | DNS Local - Serveur NGinx |
-| pfsense | julien.lan | `<IP_FIXE_PFSENSE>` | DNS Local - Interface Web Pare-feu |
+| pfsense | julien.lan | `<GW_LAN>` | DNS Local - Interface Web Pare-feu |
 | proxmox | julien.lan | `<IP_FIXE_PVE1>` | DNS Local - Interface Web Proxmox |
