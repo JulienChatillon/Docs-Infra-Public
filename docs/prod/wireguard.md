@@ -19,7 +19,7 @@ Cette architecture remplace l'ancien tunnel Site-to-Site point-à-point. Le rout
 * **Port d'écoute :** UDP <PORT_WG_SIO>
 * **Réseau de Transit VPN :** `<ZONE_TRANSIT_WG>` (Sous-réseau élargi pour permettre jusqu'à 253 pairs)
     * Concentrateur Local (pfSense Frontal PVE1) : `<IP_FIXE_LOCALE_S2S>`
-    * Pairs Distants : `<IP_FIXE_FRANCOIS_S2S>` (<PEER_02>), `<IP_FIXE_BATTEUSE_S2S>` (<PEER_03>), etc.
+    * Pairs Distants : `<IP_FIXE_FRANCOIS_S2S>` (<PEER_02>), `<IP_FIXE_BATTEUSE_S2S>` (<PEER_04>), `<RESEAU_WG_SIO>.4` (Marley), `<IP_FIXE_LOCALE_S2S>0` (<PEER_03>), etc.
 * **Endpoint Distant :** Dynamique (Les pairs distants initient la connexion vers le Hub central)
 * **Réseaux Distants Routés (via Allowed IPs) :**
  - Labo <PEER_02> : `<ZONE_WG1_FRANCOIS>` (Zone Serveurs) et `<ZONE_WG2_FRANCOIS>` (Zone Clients)
