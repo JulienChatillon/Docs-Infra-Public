@@ -53,9 +53,10 @@ Ce nœud est strictement dédié aux travaux pratiques et aux simulations systè
 La connection exterieur se fait sur la Livebox via l'IP : <IP_FIXE_BOX>
 L'infrastructure dispose ensuite d'une addresse LAN fixe : <IP_FIXE_INFRA>
 
-La sécurité des accès extérieurs est assurée par des tunnels **WireGuard** :
-1.  **Accès Nomade :** VPN pour l'administration distante via l'IP <IP_FIXE_WG>.
-2.  **Hub & Spoke :** Hebergement d'une connexion sécurisée entre mon laboratoire et plusieurs infras distantes partenaires (SIO) via un transit dédié (<ZONE_TRANSIT_WG>).
+La sécurité des accès extérieurs est assurée par une architecture hybride **WireGuard / Tailscale** :
+1.  **Accès Nomade Principal (Tailscale) :** Solution de type mesh VPN utilisée pour l'administration distante depuis le PC portable. Permet de contourner les pare-feux restrictifs locaux grâce à l'annonce des sous-réseaux (Subnet Routing). Un NAT sortant (SNAT) est appliqué sur le pare-feu du Labo pour garantir la transparence des flux vis-à-vis des pare-feux serveurs (Windows).
+2.  **Accès Nomade Secours (WireGuard) :** Tunnel classique pour l'administration distante via l'IP <IP_FIXE_WG>.
+3.  **Hub & Spoke (WireGuard) :** Hébergement d'une connexion sécurisée de type Site-à-Site entre le laboratoire et plusieurs infrastructures distantes partenaires (réseaux SIO) via un transit dédié (<ZONE_TRANSIT_WG>).
 
 ---
 
