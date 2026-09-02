@@ -42,8 +42,9 @@ Idem PVE1, des interfaces virtuelles (vmbr) distinctes ont été configurées su
 | ID VM | Nom d'hôte | Rôle & Services | Interface | IP Statique / DHCP |
 | :--- | :--- | :--- | :--- | :--- |
 | **101** | `pfSenseLABO-VM101` | Routeur interne du labo, filtrage inter-VLANs | `vmbr4 à 6`| WAN : <IP_FIXE_PFSENSE_LABO> |
-| **104** | `GLPI-VM104` | Inventaire de parc et synchronisation LDAP | `vmbr4` | <IP_FIXE_GLPI> |
+| **104** | `Nextcloud-VM104` | Plateforme de stockage en ligne | `vmbr4` | <RESEAU_SERVEURS_LABO>.251 |
 | **105** | `BD-Python-VM105` | Serveur de base de données / scripts | `vmbr4` | DHCP |
+| **106** | `GLPI-VM106` | Inventaire de parc et synchronisation LDAP | `vmbr4` | <IP_FIXE_GLPI> |
 | **200** | `WinServ25-VM200` | Contrôleur de Domaine (AD), DNS, DHCP principal | `vmbr4` | <IP_FIXE_SRV25> |
 | **201** | `Win11-Client01-VM201`| Poste client Windows intégré au domaine | `vmbr5` | DHCP |
 | **202** | `WinServSec-VM202` | Contrôleur de Domaine de secours (AD), DNS, DHCP | `vmbr4` | <IP_FIXE_SRV25SEC> |
