@@ -40,8 +40,8 @@ Ce nœud est exposé à Internet (via une redirection Livebox) et gère les serv
 
 ### B. Nœud Labo Isolé (PVE2)
 Ce nœud est strictement dédié aux travaux pratiques et aux simulations système. Il est isolé de la production pour éviter toute corruption des services critiques.
-* **Réseau :** Zones étanches (Serveurs <ZONE_SERVEURS>, Clients <ZONE_CLIENTS> et DMZ_LABO <ZONE_DMZ_LABO>).
-* **Services clés :** Windows Server 2025 (AD/DNS/DHCP), GLPI (Inventaire).
+* **Réseau Windows :** Serveurs <ZONE_SERVEURS>, Clients <ZONE_CLIENTS> et DMZ_LABO <ZONE_DMZ_LABO>
+* **Réseau Linux :** Serveurs <ZONE_SERVEURS_2> et Clients <ZONE_CLIENTS_2>
 
 ---
 
@@ -53,10 +53,8 @@ Ce nœud est strictement dédié aux travaux pratiques et aux simulations systè
 La connection exterieur se fait sur la Livebox via l'IP : <IP_FIXE_BOX>
 L'infrastructure dispose ensuite d'une addresse LAN fixe : <IP_FIXE_INFRA>
 
-La sécurité des accès extérieurs est assurée par une architecture hybride **WireGuard / Tailscale** :
-1.  **Accès Nomade Principal (Tailscale) :** Solution de type mesh VPN utilisée pour l'administration distante depuis le PC portable. Permet de contourner les pare-feux restrictifs locaux grâce à l'annonce des sous-réseaux (Subnet Routing). Un NAT sortant (SNAT) est appliqué sur le pare-feu du Labo pour garantir la transparence des flux vis-à-vis des pare-feux serveurs (Windows).
-2.  **Accès Nomade Secours (WireGuard) :** Tunnel classique pour l'administration distante via l'IP <IP_FIXE_WG>.
-3.  **Hub & Spoke (WireGuard) :** Hébergement d'une connexion sécurisée de type Site-à-Site entre le laboratoire et plusieurs infrastructures distantes partenaires (réseaux SIO) via un transit dédié (<ZONE_TRANSIT_WG>).
+La sécurité des accès extérieurs est assurée par le VPN **Tailscale** :
+Solution de type mesh VPN utilisée pour l'administration distante depuis le PC portable. Permet de contourner les pare-feux restrictifs locaux grâce à l'annonce des sous-réseaux (Subnet Routing). Un NAT sortant (SNAT) est appliqué sur le pare-feu du Labo pour garantir la transparence des flux vis-à-vis des pare-feux serveurs (Windows).
 
 ---
 
