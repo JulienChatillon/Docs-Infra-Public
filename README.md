@@ -14,7 +14,6 @@ Rréférentiel de documentation de mon infrastructure informatique. Base de conn
 ### 🌍 2. Environnement de Production & Front (PVE1)
 * [Routage et Pare-feu : pfSense Front](docs/prod/pfsense-front.md)
 * [Hébergement Web & DMZ (Nginx Proxy Manager)](docs/prod/reverse-proxy.md)
-* [Supervision Infra (Grafana)](docs/prod/supervision.md)
 
 ### 🧪 3. Environnement de Laboratoire (PVE2) - Windows
 * [Routage interne et Pare-feu : pfSense Labo](docs/labo/pfsense-labo.md)
