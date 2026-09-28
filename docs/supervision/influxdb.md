@@ -10,7 +10,7 @@ La surveillance proactive des performances matérielles (CPU, RAM, Températures
 Le moteur d'ingestion historique (InfluxDB) a été remplacé par **Prometheus**, qui interroge régulièrement les cibles pour récupérer leurs constantes vitales.
 * **Agents de collecte :** L'agent léger `Node Exporter` est installé directement sur les hyperviseurs physiques PVE1 (Production) et PVE2 (Labo isolé). Il lit et expose les métriques matérielles brutes du système hôte (sur le port `9100`).
 * **Modèle Pull (Traction) :** Prometheus (sur la VM `Superv`) vient récupérer les données toutes les 15 secondes via des ouvertures chirurgicales et unidirectionnelles dans le pare-feu pfSense.
-* **Architecture Hub & Spoke :** Le système est nativement conçu pour s'étendre aux infrastructures distantes (réseau `WG_SIO` en <ZONE_TRANSIT_WG>), permettant de monitorer les serveurs des collaborateurs connectés au tunnel WireGuard sans nécessiter d'ouverture de ports de leur côté.
+* **Architecture Hub & Spoke :** Le système est nativement conçu pour s'étendre aux infrastructures distantes (réseau `WG_SIO` en 10.250.0.0/24), permettant de monitorer les serveurs des collaborateurs connectés au tunnel WireGuard sans nécessiter d'ouverture de ports de leur côté.
 
 ## 2. Visualisation (Grafana)
 Les données temporelles stockées dans Prometheus sont exploitées visuellement via Grafana.

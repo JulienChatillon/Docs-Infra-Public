@@ -38,7 +38,7 @@ Le pfSense est configuré en mode **Hybrid Outbound NAT**, ce qui permet de cons
 
 | Interface de sortie | Réseau Source | Adresse de traduction (NAT) | Description / Rôle |
 | :--- | :--- | :--- | :--- |
-| **WAN** | `100.64.0.0/10` | WAN address | NAT pour accès Tailscale |
+| **WAN** | `<ZONE_TAILSCALE>` | WAN address | NAT pour accès Tailscale |
 | **WAN** | `DMZ_SUPERV subnets` | WAN address | NAT pour accès internet DMZ_SUPERV |
 | **WAN** | `DMZ subnets` | WAN address | NAT pour accès internet DMZ |
 | **WAN** | `LAN subnets` | WAN address | NAT internet (Réseau de Prod principal) |
@@ -86,7 +86,7 @@ Gère les services exposés (comme le Reverse Proxy). Cet environnement est cons
 Cet onglet est un groupe d'interfaces. Les règles ici s'appliquent à tous les tunnels VPN WireGuard confondus avant le filtrage spécifique par tunnel.
 
 | Action | Protocole | Source | Destination | Explication du flux |
-| ✅ Autoriser | IPv4 | 100.64.0.0/10 | `*` (Any) | **Accès Admin Total** : Le profil nomade n'a aucune restriction et peut joindre l'intégralité de l'infrastructure (LAN, Serveurs, DMZ, Internet). |
+| ✅ Autoriser | IPv4 | <ZONE_TAILSCALE> | `*` (Any) | **Accès Admin Total** : Le profil nomade n'a aucune restriction et peut joindre l'intégralité de l'infrastructure (LAN, Serveurs, DMZ, Internet). |
 
 ---
 
