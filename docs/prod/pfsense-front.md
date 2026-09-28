@@ -14,7 +14,6 @@ La machine virtuelle possède plusieurs interfaces virtuelles (vmbr) pour segmen
 | **vmbr1** | `LAN_PROD` | `<ZONE_LAN>` | `<GW_LAN>` | Réseau de production interne et de supervision. |
 | **vmbr2** | `DMZ` | `<ZONE_DMZ>` | `<GW_DMZ>` | Zone démilitarisée isolée hébergeant le Reverse Proxy. |
 | **vmbr3** | `DMZ_SUPERV` | `<ZONE_DMZ_SUPERV>` | `<GW_DMZ_SUPERV>` | Zone démilitarisée isolée hébergeant la supervision. |
-| **WG0** | `VPN_NOMADE`| `<ZONE_WG_NOMADE>` | `<IP_FIXE_WG>` | Interface virtuelle du tunnel WireGuard (Administration). |
 
 ---
 
@@ -26,14 +25,10 @@ Pour permettre la communication bidirectionnelle entre l'extérieur (WAN) et les
 
 Ces règles gèrent les connexions initiées depuis l'extérieur vers les services internes, configurées en cascade depuis la box opérateur.
 
-*Note technique : Les ports `<PORT_WG_NOMADE>` et `<PORT_WG_SIO>` (UDP) dédiés à WireGuard ne font pas l'objet d'une redirection (NAT) vers une autre machine derrière le routeur. Ils sont directement autorisés sur l'interface WAN du pfSense via une règle de pare-feu (Firewall Rule).*
-
 | Port Externe | Protocole | Service cible | Destination Interne (Machine & IP) | Rôle dans l'infrastructure |
 | :--- | :--- | :--- | :--- | :--- |
 | **80 / 443** | TCP | Serveur Web (HTTP/HTTPS) | `Debian-VM103` (`<IP_FIXE_REVPROXY>`) | Permet l'accès public sécurisé au site web (Reverse Proxy / Nginx). |
 | **<PORT_SUPERVISION>** | TCP | Interface Supervision | `SuperV-VM102` (`<IP_FIXE_SUPERV>`) | Permet l'accès sécurisé (idéalement via VPN) au tableau de bord Grafana. |
-| **<PORT_WG_NOMADE>** | UDP | Tunnel VPN (WireGuard) | `pfSense-Front` (VM100) | Permet la connexion distante chiffrée (Accès Nomade). |
-| **<PORT_WG_SIO>** | UDP | Tunnel VPN (WireGuard) | `pfSense-Front` (VM100) & `pfSense-Labo` (VM101) | Permet la connexion distante chiffrée (Interco Site-to-Site). |
 
 ### 2.2 NAT Sortant (Outbound ou Masquerading)
 
@@ -43,9 +38,9 @@ Le pfSense est configuré en mode **Hybrid Outbound NAT**, ce qui permet de cons
 
 | Interface de sortie | Réseau Source | Adresse de traduction (NAT) | Description / Rôle |
 | :--- | :--- | :--- | :--- |
+| **WAN** | `100.64.0.0/10` | WAN address | NAT pour accès Tailscale |
 | **WAN** | `DMZ_SUPERV subnets` | WAN address | NAT pour accès internet DMZ_SUPERV |
 | **WAN** | `DMZ subnets` | WAN address | NAT pour accès internet DMZ |
-| **WAN** | `<ZONE_WG_NOMADE>` | WAN address | NAT pour accès Proxmox depuis WireGuard (Tunnel Nomade) |
 | **WAN** | `LAN subnets` | WAN address | NAT internet (Réseau de Prod principal) |
 | **WAN** | `<ZONE_SERVEURS>` | WAN address | NAT pour accès internet LABO (Zone Serveurs) |
 
@@ -62,8 +57,6 @@ Gère le trafic provenant d'Internet et entrant sur le routeur frontal.
 
 | Action | Protocole | Source | Destination | Explication du flux |
 | :--- | :--- | :--- | :--- | :--- |
-| ✅ Autoriser | UDP (<PORT_WG_SIO>) | `*` (Any) | WAN Address | Autorise les requêtes externes pour établir le tunnel VPN Site-to-Site (SIO). |
-| ✅ Autoriser | UDP (<PORT_WG_NOMADE>) | `*` (Any) | WAN Address | Autorise les requêtes externes pour établir le tunnel VPN Nomade (Julien). |
 | ✅ Autoriser | TCP (80) | `*` (Any) | `<IP_FIXE_REVPROXY>` | Redirection (NAT) du trafic web HTTP vers le Nginx Proxy Manager en DMZ. |
 | ✅ Autoriser | TCP (443) | `*` (Any) | `<IP_FIXE_REVPROXY>` | Redirection (NAT) du trafic web HTTPS sécurisé vers le Nginx Proxy Manager en DMZ. |
 
@@ -89,36 +82,11 @@ Gère les services exposés (comme le Reverse Proxy). Cet environnement est cons
 
 ---
 
-### 🌍 Onglet WireGuard (Groupe Global)
+### 🌍 Onglet Tailscale (Groupe Global)
 Cet onglet est un groupe d'interfaces. Les règles ici s'appliquent à tous les tunnels VPN WireGuard confondus avant le filtrage spécifique par tunnel.
 
 | Action | Protocole | Source | Destination | Explication du flux |
-| :--- | :--- | :--- | :--- | :--- |
-
----
-
-### 👤 Onglet OPT1WIREGUARD (Tunnel Nomade)
-Gère le trafic provenant de l'appareil distant connecté en nomade (Julien).
-
-| Action | Protocole | Source | Destination | Explication du flux |
-| :--- | :--- | :--- | :--- | :--- |
-| ✅ Autoriser | IPv4 | OPT1WIREGUARD subnets | `*` (Any) | **Accès Admin Total** : Le profil nomade n'a aucune restriction et peut joindre l'intégralité de l'infrastructure (LAN, Serveurs, DMZ, Internet). |
-
----
-
-### 🤝 Onglet WG_SIO (Tunnel Hub & Spoke)
-Gère le trafic provenant du routeur distant partenaire (Réseau SIO).
-
-| Action | Protocole | Source | Destination | Explication du flux |
-| :--- | :--- | :--- | :--- | :--- |
-| ❌ Bloquer | IPv4 | `WG_SIO subnets` | `any` | Intérupteur pour couper la liaison |
-| ❌ Bloquer | IPv4 | `WG_SIO subnets` | `<ZONE_LAN>` | Interdit l'accès au réseau de PRODUCTION (PVE1). |
-| ❌ Bloquer | IPv4 | `WG_SIO subnets` | `<ZONE_DMZ>` | Interdit l'accès à la zone DMZ (Portfolio). |
-| ✅ Autoriser | IPv4 | `WG_SIO subnets` | `<ZONE_SERVEURS>` | Autorise les machines des camarades à accéder à la zone SERVEURS du Labo (PVE2). |
-| ✅ Autoriser | IPv4 | `WG_SIO subnets` | `<ZONE_CLIENTS>` | Autorise les machines des camarades à accéder à la zone CLIENTS du Labo (PVE2). |
-| ✅ Autoriser | IPv4 | `* (Tout)` | `WG_SIO subnets` | Autorise les camarades connectés au VPN à communiquer entre eux. |
-
-La règle de l'interupteur est désactivée et est la en cas de problème pour couper tout traffic entrant via WG_SIO
+| ✅ Autoriser | IPv4 | 100.64.0.0/10 | `*` (Any) | **Accès Admin Total** : Le profil nomade n'a aucune restriction et peut joindre l'intégralité de l'infrastructure (LAN, Serveurs, DMZ, Internet). |
 
 ---
 
