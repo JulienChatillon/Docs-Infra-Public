@@ -1,18 +1,18 @@
 # 💾 Stratégie de Sauvegarde et PRA (Plan de Reprise d'Activité)
 
-La pérennité de l'infrastructure repose sur une stratégie de sauvegarde rigoureuse et un Plan de Reprise d'Activité (PRA) défini. L'objectif est de minimiser la perte de données (RPO) et le temps d'interruption des services (RTO) en cas de sinistre.
+La pérennité de l'infrastructure repose sur une stratégie de sauvegarde rigoureuse et un Plan de Reprise d'Activité défini. L'objectif est de minimiser la perte de données et le temps d'interruption des services en cas de sinistre.
 
 ---
 
 ## 1. Politique de Sauvegarde (Proxmox VE)
 
-La gestion des sauvegardes est centralisée directement via l'outil de backup natif de Proxmox (VZDump), qui permet de sauvegarder l'état complet des machines virtuelles (système, configuration, données).
+La gestion des sauvegardes est centralisée directement via l'outil de backup natif de Proxmox, qui permet de sauvegarder l'état complet des machines virtuelles (système, configuration, données).
 
 ### A. Philosophie 3-2-1 et État Actuel
 La stratégie s'inspire de la règle standard de l'industrie (3-2-1), adaptée aux contraintes matérielles actuelles :
 * **3 copies des données :** Les données en production et les archives de sauvegarde.
 * **2 supports de stockage :** Les disques internes des machines (Production) et un disque dur externe dédié (Sauvegarde).
-* **1 sauvegarde externalisée :** *[Axe d'amélioration]* Actuellement, toutes les sauvegardes sont physiquement au même endroit. L'objectif futur est de synchroniser ces archives vers un stockage Cloud chiffré ou le site distant (via le tunnel WireGuard) pour pallier un sinistre physique (vol, incendie).
+* **1 sauvegarde externalisée :** *[Axe d'amélioration]* Actuellement, toutes les sauvegardes sont physiquement au même endroit. L'objectif futur est de synchroniser ces archives vers un stockage Cloud chiffré ou le site distant (via VPN) pour pallier un sinistre physique (vol, incendie).
 
 ### B. Planification et Rétention
 Les sauvegardes sont automatisées pour l'ensemble des machines virtuelles :
