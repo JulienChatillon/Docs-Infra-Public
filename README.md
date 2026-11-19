@@ -1,6 +1,6 @@
 # 📜 Documentation Infrastructure & Labo SIO
 
-Rréférentiel de documentation de mon infrastructure informatique. Base de connaissances centralisée pour l'architecture, les configurations et les procédures liées à mon environnement de production (PVE1) et mon laboratoire isolé (PVE2).
+Réréférentiel de documentation de mon infrastructure informatique. Base de connaissances centralisée pour l'architecture, les configurations et les procédures liées à mon environnement de production (PVE1) et mon laboratoire isolé (PVE2).
 
 ---
 
