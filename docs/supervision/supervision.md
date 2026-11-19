@@ -1,4 +1,4 @@
-# 👁️ Supervision, Sécurité et Métriques (Stack PLG & IDS)
+# 👁️ Supervision, Sécurité et Métriques
 
 La surveillance proactive des performances matérielles (CPU, RAM, Températures, Disques) et réseau de l'ensemble de l'infrastructure est centralisée sur une "Tour de Contrôle" dédiée. Cette architecture de monitoring a migré vers un modèle moderne de type "Pull", garantissant une visibilité totale tout en respectant une isolation stricte des environnements.
 
