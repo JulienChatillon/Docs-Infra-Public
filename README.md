@@ -25,4 +25,4 @@ Réréférentiel de documentation de mon infrastructure informatique. Base de co
 * [Cœur de réseau Linux : Services de base (dnsmasq)](docs/labo/lin-services.md)
 
 ### 👁️ 5. Supervision & Sécurité
-* [Monitoring et métriques (Prometheus)](docs/supervision/influxdb.md)
+* [Monitoring et métriques (Prometheus)](docs/supervision/supervision.md)
